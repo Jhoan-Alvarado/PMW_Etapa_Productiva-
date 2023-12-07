@@ -4,7 +4,7 @@
 
 $stm = $pdo->prepare("SELECT * FROM tecnico");
 $stm->execute();
-$tecnicos = $stm->fetchAll(PDO::FETCH_ASSOC);
+$estudiantes = $stm->fetchAll(PDO::FETCH_ASSOC);
 
 
 ?>              
