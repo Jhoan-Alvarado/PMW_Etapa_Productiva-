@@ -11,11 +11,16 @@ $estudiantes = $stm->fetchAll(PDO::FETCH_ASSOC);
 
 <head>
     <link rel="stylesheet" href="../../css/estudiante/estudiante.css">
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
     
     <div class="estudiantes">
         
+        <input type="text" id="searchInput" placeholder="Buscar estudiantes...">
+
     <table>
         <thead>
             <tr>
@@ -42,4 +47,31 @@ $estudiantes = $stm->fetchAll(PDO::FETCH_ASSOC);
             <?php 
               $estudiantes = 0; } ?>
               </tbody>
+
+
+
+              <script>
+    $(document).ready(function () {
+        $("#searchInput").on("input", function () {
+            var searchTerm = $(this).val();
+
+            $.ajax({
+                url: "search.php",
+                method: "POST",
+                data: { searchTerm: searchTerm },
+                dataType: "json",
+                success: function (data) {
+                    // Actualizar la tabla con los resultados
+                    var tableBody = $("tbody");
+                    tableBody.empty();
+
+                    data.forEach(function (e) {
+                        tableBody.append("<tr><td>" + e.codigo_Est + "</td><td>" + e.ident_Estudiante + "</td><td>" + e.primer_Nombre + " " + e.segundo_Nombre + "</td><td>" + e.primer_Apellido + " " + e.segundo_Apellido + "</td><td>" + e.telefono + "</td><td>" + e.nombre_Tecnico + "</td></tr>");
+                    });
+                }
+            });
+        });
+    });
+</script>
+
             </body>
