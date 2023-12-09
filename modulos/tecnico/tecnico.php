@@ -7,48 +7,50 @@ $stm->execute();
 $tecnicos = $stm->fetchAll(PDO::FETCH_ASSOC);
 
 
-?>              
+?>
 
-    <a href="crearTecnico.php">Crear</a>
+<head>
+    <link rel="stylesheet" href="../../css/tecnico/tecnico.css">
+</head>
 
-<div class="container">
+<body>
 
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Actualizar</th>
-                <th>Eliminar</th>
-            </tr>
-        </thead>
 
-        <tbody>
-            <?php foreach ($tecnicos as $t) { ?>
+    <div class="container">
 
+        <table>
+            <thead>
                 <tr>
-                    <td>
-                        <?php echo $t['cod_Tecnico'] ?>
-                    </td>
-                    <td>
-                        <?php echo $t['nombre_Tecnico'] ?>
-                    </td>
-                    <td> <a href="editarTecnico.php?id=<?php echo $t['cod_Tecnico'] ?>">ACTUALIZAR</a></td>
-                    <td> <a href="eliminarTecnico.php?id=<?php echo $t['cod_Tecnico'] ?>">ELIMINAR</a></td>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Actualizar</th>
+                    <th>Eliminar</th>
                 </tr>
-            <?php 
-        
-        $tecnicos = 0; } ?>
-        </tbody>
+            </thead>
 
-    </table>
+            <tbody>
+                <?php foreach ($tecnicos as $t) { ?>
 
-</div>
+                    <tr>
+                        <td>
+                            <?php echo $t['cod_Tecnico'] ?>
+                        </td>
+                        <td>
+                            <?php echo $t['nombre_Tecnico'] ?>
+                        </td>
+                        <td> <a href="editarTecnico.php?id=<?php echo $t['cod_Tecnico'] ?>">ACTUALIZAR</a></td>
+                        <td> <a href="eliminarTecnico.php?id=<?php echo $t['cod_Tecnico'] ?>">ELIMINAR</a></td>
 
+                    </tr>
+                    <?php
 
+                    $tecnicos = 0;
+                } ?>
+            </tbody>
 
+        </table>
 
+    </div>
 
-
-
+</body>
 <?php include('../../vistas/footer.php'); ?>

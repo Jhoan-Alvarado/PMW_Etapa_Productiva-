@@ -1,7 +1,5 @@
-<?php include ('../../config/db.php') ?>
-
-
-<?php  
+<?php include ('../../config/db.php'); 
+include("../../vistas/header.php");
 
 $stm = $pdo->prepare("SELECT e.codigo_Est, e.ident_Estudiante, e.primer_Nombre, e.segundo_Nombre,e.primer_Apellido, e.segundo_Apellido, e.telefono, t.nombre_Tecnico FROM estudiante e LEFT JOIN tecnico t ON e.cod_Tecnico_Est = t.cod_Tecnico;");
 $stm->execute();
@@ -9,11 +7,15 @@ $estudiantes = $stm->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
-<a href="crearEstudiante.php">Crear</a>
 
 
-<div class="container">
-
+<head>
+    <link rel="stylesheet" href="../../css/estudiante/estudiante.css">
+</head>
+<body>
+    
+    <div class="estudiantes">
+        
     <table>
         <thead>
             <tr>
@@ -40,3 +42,4 @@ $estudiantes = $stm->fetchAll(PDO::FETCH_ASSOC);
             <?php 
               $estudiantes = 0; } ?>
               </tbody>
+            </body>
