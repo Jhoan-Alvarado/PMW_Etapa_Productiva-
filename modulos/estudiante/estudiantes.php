@@ -11,16 +11,19 @@ $estudiantes = $stm->fetchAll(PDO::FETCH_ASSOC);
 
 <head>
     <link rel="stylesheet" href="../../css/estudiante/estudiante.css">
+    <link rel="stylesheet" href="../../css/buscador/buscador.css">
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
-    
-    <div class="estudiantes">
-        
-        <input type="text" id="searchInput" placeholder="Buscar estudiantes...">
 
+    <div class="serch">
+        <input class="buscador" type="text" id="searchInput" placeholder="Buscar estudiantes...">
+    </div>
+
+    <div class="estudiantes">
+             
     <table>
         <thead>
             <tr>
