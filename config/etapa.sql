@@ -64,7 +64,7 @@ truncate table tecnico;
 -- creacion tabla De Estudiante 
 	
     create table estudiante (
-	codigo_Est bigint auto_increment primary key,
+	codigo_Est bigint primary key,
     ident_Estudiante char (15) not null,
     primer_Nombre varchar (20) not null,
     segundo_Nombre varchar (20) default '',
@@ -74,11 +74,14 @@ truncate table tecnico;
 	cod_Tecnico_Est int,
     foreign key (cod_Tecnico_Est) references tecnico (cod_Tecnico)
     );
+    
+    select * from estudiante;
 
 -- Creacion de procediento de Estudiante con sus validaciones 
 
 delimiter //
-create procedure insertar_estudiante(
+create procedure insertar_estudiantess(
+	in codigo_Est bigint,
     in identificacion char(15),
     in primer_nombre varchar(20),
     in segundo_nombre varchar(20),
@@ -103,8 +106,8 @@ begin
         set message_text = 'La identificación del estudiante ya existe en la tabla "estudiante".';
     else
     
-        insert into estudiante (ident_estudiante, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, telefono, cod_tecnico_est)
-        values (identificacion, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, telefono, cod_tecnico_est);
+        insert into estudiante (codigo_Est,ident_estudiante, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, telefono, cod_tecnico_est)
+        values (codigo_Est,identificacion, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, telefono, cod_tecnico_est);
     end if;
 end //
 delimiter ;
@@ -484,13 +487,13 @@ delimiter ;
 
 
     
-    create table  citas_Seguimiento_Pasantia (
+create table  citas_Seguimiento_Pasantia (
 cod_Cita_Cont int primary key auto_increment,
 fecha_Realizada datetime,
 responsable_Cita varchar (50) not null,
 Estado boolean,
 nota float,
- cod_Pas_Est bigint, 
+cod_Pas_Est bigint, 
 foreign key (cod_Pas_Est) references pasantias_Estudiante (cod_Pas_Est)
 
 );
