@@ -112,6 +112,43 @@ begin
 end //
 delimiter ;
 
+DELIMITER //
+
+CREATE PROCEDURE actualizar_estudiantessss(
+    IN codigo_est_input bigint,
+    IN identificacion_input char(15),
+    IN primer_nombre_input varchar(20),
+    IN segundo_nombre_input varchar(20),
+    IN primer_apellido_input varchar(20),
+    IN segundo_apellido_input varchar(20),
+    IN telefono_input char(10),
+    IN cod_tecnico_est_input int
+)
+BEGIN
+    DECLARE tecnico_existente INT;
+
+    SELECT COUNT(*) INTO tecnico_existente FROM tecnico WHERE cod_tecnico = cod_tecnico_est_input;
+
+    IF tecnico_existente = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'El código de técnico no existe en la tabla "tecnico".';
+    ELSE
+        UPDATE estudiante
+        SET ident_estudiante = identificacion_input,
+            primer_nombre = primer_nombre_input,
+            segundo_nombre = segundo_nombre_input,
+            primer_apellido = primer_apellido_input,
+            segundo_apellido = segundo_apellido_input,
+            telefono = telefono_input,
+            cod_tecnico_est = cod_tecnico_est_input
+        WHERE codigo_est = codigo_est_input;
+    END IF;
+END //
+
+DELIMITER ;
+ call actualizar_estudiantessss(7870, "	1005139574", "Estefania", "Andrea", "Alvarado" ,"Chicangana", 3106124260, 74);
+ 
+
 -- creacion de tablas de modalidades (contrato, pasantias,homologacion y proyecto)
 
 create table contrato_Aprendizaje (

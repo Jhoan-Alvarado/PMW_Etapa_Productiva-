@@ -33,7 +33,7 @@ $estudiantes = $stm->fetchAll(PDO::FETCH_ASSOC);
                 <th>Apellidos</th>
                 <th>Telefono</th>
                 <th>Carrera</th>
-            </tr>
+                <th>Mas informacion</th>
         </thead>
 
         <tbody>
@@ -46,6 +46,8 @@ $estudiantes = $stm->fetchAll(PDO::FETCH_ASSOC);
                     <td><?php echo $e['primer_Apellido']. " " . $e['segundo_Apellido'] ?></td>
                     <td><?php echo $e['telefono']?></td>
                     <td><?php echo $e['nombre_Tecnico']?></td>
+                    <td><a href="actualizarEstudiante.php?id=<?php echo $e['codigo_Est'];?>"> -></a></td>
+                    
                 </tr>
             <?php 
               $estudiantes = 0; } ?>
@@ -56,7 +58,7 @@ $estudiantes = $stm->fetchAll(PDO::FETCH_ASSOC);
               <script>
     $(document).ready(function () {
         $("#searchInput").on("input", function () {
-            var searchTerm = $(this).val();
+            let searchTerm = $(this).val();
 
             $.ajax({
                 url: "search.php",
@@ -64,17 +66,18 @@ $estudiantes = $stm->fetchAll(PDO::FETCH_ASSOC);
                 data: { searchTerm: searchTerm },
                 dataType: "json",
                 success: function (data) {
-                    // Actualizar la tabla con los resultados
-                    var tableBody = $("tbody");
+                    
+                    let tableBody = $("tbody");
                     tableBody.empty();
 
                     data.forEach(function (e) {
-                        tableBody.append("<tr><td>" + e.codigo_Est + "</td><td>" + e.ident_Estudiante + "</td><td>" + e.primer_Nombre + " " + e.segundo_Nombre + "</td><td>" + e.primer_Apellido + " " + e.segundo_Apellido + "</td><td>" + e.telefono + "</td><td>" + e.nombre_Tecnico + "</td></tr>");
+                        tableBody.append("<tr><td>" + e.codigo_Est + "</td><td>" + e.ident_Estudiante + "</td><td>" + e.primer_Nombre + " " + e.segundo_Nombre + "</td><td>" + e.primer_Apellido + " " + e.segundo_Apellido + "</td><td>" + e.telefono + "</td><td>" + e.nombre_Tecnico + "</td><td><a href='actualizarEstudiante.php?id=" + e.codigo_Est + "'>-></a></td></tr>");
                     });
                 }
             });
         });
     });
 </script>
+
 
             </body>
