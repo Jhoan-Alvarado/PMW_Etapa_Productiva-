@@ -1,5 +1,4 @@
 <?php include('../../vistas/header.php'); ?>
-
 <?php include("../../config/db.php");
 
 $stm = $pdo->prepare("SELECT * FROM tecnico");

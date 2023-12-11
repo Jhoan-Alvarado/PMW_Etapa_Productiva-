@@ -1,4 +1,5 @@
 <?php include('../../config/db.php');
+include("../../vistas/header.php");
 
 if (isset($_GET['id'])) {
     $cod_Est = $_GET['id'];

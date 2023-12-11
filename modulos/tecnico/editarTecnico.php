@@ -1,4 +1,5 @@
 <?php include ("../../config/db.php");
+include('../../vistas/header.php');
 
 if (isset($_GET["id"])) {
     $cod_TecnicoE = $_GET["id"];
@@ -19,9 +20,15 @@ if (isset($_GET["id"])) {
 }
 ?>
 
-<form action="" method="post">
+<head>
+    <link rel="stylesheet" href="../../css/tecnico/actualizar.css">
+</head>
+
+<div class="formulario_estudiantes">
+<form  action="" method="post">
     <h1><?php echo $cod_TecnicoE; ?></h1>
-    <input type="text" name="nombreTecnico">
+    <input class="estilo" type="text" name="nombreTecnico">
     <button type="submit">Actualizar</button>
-    <a href="tecnico.php">CANCELAR</a>
+    <button><a href="tecnico.php">CANCELAR</a></button>
 </form>
+</div>
