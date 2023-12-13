@@ -1,0 +1,28 @@
+.c {
+    display: grid;
+    grid-template-areas:
+      'top-left top-right'
+      'bottom bottom';
+    grid-template-rows: auto auto;
+    grid-template-columns: 1fr 1fr;
+    height: 90vh;  
+ }
+  
+  
+  .info-Est {
+      border: 2px solid green;
+      grid-area: top-left;
+      background-color: #f0f0f0;
+    }
+    
+    .citas {
+      border: 2px solid green;
+    grid-area: top-right;
+    background-color: #ccc;
+  }
+  
+  .etapa {
+    grid-area: bottom;
+    border: 2px solid green;
+    background-color: #999;
+  }

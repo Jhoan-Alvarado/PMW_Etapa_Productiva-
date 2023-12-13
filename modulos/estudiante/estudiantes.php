@@ -1,7 +1,7 @@
 <?php include ('../../config/db.php'); 
 include("../../vistas/header.php");
 
-$stm = $pdo->prepare("SELECT e.codigo_Est, e.ident_Estudiante, e.primer_Nombre, e.segundo_Nombre,e.primer_Apellido, e.segundo_Apellido, e.telefono, t.nombre_Tecnico FROM estudiante e LEFT JOIN tecnico t ON e.cod_Tecnico_Est = t.cod_Tecnico;");
+$stm = $pdo->prepare("SELECT e.codigo_Est, e.ident_Estudiante, e.primer_Nombre, e.segundo_Nombre,e.primer_Apellido, e.segundo_Apellido, e.telefono, e.semestre, t.nombre_Tecnico FROM estudiante e LEFT JOIN tecnico t ON e.cod_Tecnico_Est = t.cod_Tecnico;");
 $stm->execute();
 $estudiantes = $stm->fetchAll(PDO::FETCH_ASSOC);
 
@@ -15,6 +15,7 @@ $estudiantes = $stm->fetchAll(PDO::FETCH_ASSOC);
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
 
@@ -32,8 +33,9 @@ $estudiantes = $stm->fetchAll(PDO::FETCH_ASSOC);
                 <th>Nombres</th>
                 <th>Apellidos</th>
                 <th>Telefono</th>
+                <th>Semestre</th>
                 <th>Carrera</th>
-                <th>Mas informacion</th>
+                <th></th>
         </thead>
 
         <tbody>
@@ -45,14 +47,14 @@ $estudiantes = $stm->fetchAll(PDO::FETCH_ASSOC);
                     <td><?php echo $e['primer_Nombre']. " "  . $e['segundo_Nombre'] ;?></td>
                     <td><?php echo $e['primer_Apellido']. " " . $e['segundo_Apellido'] ?></td>
                     <td><?php echo $e['telefono']?></td>
+                    <td><?php echo $e['semestre']?></td>
                     <td><?php echo $e['nombre_Tecnico']?></td>
-                    <td><a href="actualizarEstudiante.php?id=<?php echo $e['codigo_Est'];?>"> -></a></td>
+                    <td><a href="vestudiante.php?id=<?php echo $e['codigo_Est'];?>"><i class="fa-solid fa-eye "></i></a></td>
                     
                 </tr>
             <?php 
               $estudiantes = 0; } ?>
               </tbody>
-
 
 
               <script>
@@ -71,7 +73,7 @@ $estudiantes = $stm->fetchAll(PDO::FETCH_ASSOC);
                     tableBody.empty();
 
                     data.forEach(function (e) {
-                        tableBody.append("<tr><td>" + e.codigo_Est + "</td><td>" + e.ident_Estudiante + "</td><td>" + e.primer_Nombre + " " + e.segundo_Nombre + "</td><td>" + e.primer_Apellido + " " + e.segundo_Apellido + "</td><td>" + e.telefono + "</td><td>" + e.nombre_Tecnico + "</td><td><a href='actualizarEstudiante.php?id=" + e.codigo_Est + "'>-></a></td></tr>");
+                        tableBody.append("<tr><td>" + e.codigo_Est + "</td><td>" + e.ident_Estudiante + "</td><td>" + e.primer_Nombre + " " + e.segundo_Nombre + "</td><td>" + e.primer_Apellido + " " + e.segundo_Apellido + "</td><td>" + e.telefono + "</td><td>" + e.nombre_Tecnico + "</td><td><a href='vestudiante.php?id=" + e.codigo_Est + "'><i class='fa-solid fa-eye'></i></a></td></tr>");
                     });
                 }
             });

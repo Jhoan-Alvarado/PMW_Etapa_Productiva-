@@ -41,8 +41,10 @@ try {
     <label for="">Teléfono:</label>
     <input class="estilo" type="tel" id="telefono" name="telefono" maxlength="10"><br><br>
 
-    <label class="estilo" for="">Código Técnico:</label>
+    <label class="estilo" for="">Semestre</label>
+    <input type="text" name ="semestre" class="estilo">
 
+    <label class="estilo" for="">Tecnico al que pertenece:</label>
     <select class="estilo" id="cod_Tecnico_Est" name="cod_Tecnico_Est">
       <?php foreach ($tecnico as $t) { ?>
         <option value="<?php echo $t['cod_Tecnico']; ?>">
@@ -50,6 +52,9 @@ try {
         </option>
       <?php } ?>
     </select>
+        
+    
+    
     <button type="submit" value="Enviar">Enviar</button>
   </form>
 
@@ -69,8 +74,9 @@ if ($_POST) {
     $segundo_apellido = (isset($_POST["segundo_Apellido"])) ? $_POST["segundo_Apellido"] : "";
     $telefono = (isset($_POST["telefono"])) ? $_POST["telefono"] : "";
     $cod_tecnico = (isset($_POST["cod_Tecnico_Est"])) ? $_POST["cod_Tecnico_Est"] : "";
+    $semestre = (isset($_POST["semestre"])) ? $_POST["semestre"] : "";
 
-    $stm = $pdo->prepare("CALL insertar_estudiantess(?,?,?,?,?,?,?,?)");
+    $stm = $pdo->prepare("CALL insertarestudiante(?,?,?,?,?,?,?,?,?)");
     $codRandom = rand(1, 10000);
     $stm->bindParam(1, $codRandom, PDO::PARAM_INT);
     $stm->bindParam(2, $iden_Estudiante, PDO::PARAM_STR);
@@ -79,7 +85,8 @@ if ($_POST) {
     $stm->bindParam(5, $primer_apellido, PDO::PARAM_STR);
     $stm->bindParam(6, $segundo_apellido, PDO::PARAM_STR);
     $stm->bindParam(7, $telefono, PDO::PARAM_STR);
-    $stm->bindParam(8, $cod_tecnico, PDO::PARAM_INT);
+    $stm->bindParam(8, $semestre, PDO::PARAM_STR);
+    $stm->bindParam(9, $cod_tecnico, PDO::PARAM_INT);
     $stm->execute();
     header("Location: estudiantes.php");
 

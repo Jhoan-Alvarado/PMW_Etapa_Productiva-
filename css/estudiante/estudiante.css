@@ -8,8 +8,9 @@
     border-collapse: collapse;
     margin-top: 20px;
   }
-
+  
   th, td {
+    /* border: 8px solid green; */
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
@@ -22,11 +23,6 @@
   tr:nth-child(even) {
     background-color: #f9f9f9;
   }
-
-
-
-
-
 
 
 

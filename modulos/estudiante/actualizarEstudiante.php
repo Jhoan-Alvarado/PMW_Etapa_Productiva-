@@ -22,8 +22,9 @@ if (isset($_GET['id'])) {
             $segundo_apellido = (isset($_POST["segundo_Apellido"])) ? $_POST["segundo_Apellido"] : "";
             $telefono = (isset($_POST["telefono"])) ? $_POST["telefono"] : "";
             $cod_tecnico = (isset($_POST["cod_Tecnico_Est"])) ? $_POST["cod_Tecnico_Est"] : "";
-            
-            $stm = $pdo->prepare ('CALL actualizar_estudiantessss(?,?,?,?,?,?,?,?)');
+            $semestre = (isset($_POST["semestre"])) ? $_POST["semestre"] : "";
+
+            $stm = $pdo->prepare ('CALL actualizar_estudiante(?,?,?,?,?,?,?,?,?)');
             $stm->bindParam(1,$cod_Est, PDO::PARAM_INT);
             $stm->bindParam(2,$iden_Estudiante, PDO::PARAM_STR);
             $stm->bindParam(3,$primer_nombre, PDO::PARAM_STR);
@@ -31,7 +32,8 @@ if (isset($_GET['id'])) {
             $stm->bindParam(5,$primer_apellido, PDO::PARAM_STR);
             $stm->bindParam(6,$segundo_apellido, PDO::PARAM_STR);
             $stm->bindParam(7,$telefono, PDO::PARAM_INT);
-            $stm->bindParam(8,$cod_tecnico, PDO::PARAM_INT);
+            $stm->bindParam(8, $semestre, PDO::PARAM_STR);
+            $stm->bindParam(9,$cod_tecnico, PDO::PARAM_INT);
             $stm->execute();
             header("Location: estudiantes.php");
             exit;
@@ -80,6 +82,11 @@ if (isset($_GET['id'])) {
 
     <label for="">Teléfono:</label>
     <input class="estilo" type="tel" value = "<?php echo $e['telefono']?>" id="telefono" name="telefono" maxlength="10"><br><br>
+
+
+    <label class="estilo" for="">Semestre</label>
+    <input type="text" name ="semestre" class="estilo" value = "<?php echo $e['semestre']?>">
+
 
     <label class="estilo" for="">Código Técnico:</label>
 
