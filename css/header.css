@@ -12,7 +12,7 @@
     background-color: #333;
     display: flex;
     align-content: space-around;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
     flex-wrap: wrap;
   }
