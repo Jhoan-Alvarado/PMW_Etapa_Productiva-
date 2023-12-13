@@ -80,6 +80,7 @@ truncate table tecnico;
     delete from estudiante where codigo_Est = 6094;
 
 -- Creacion de procediento de Estudiante con sus validaciones 
+
 delimiter //
 create procedure insertarestudiante(
     in codigoestudiante bigint,
