@@ -1,6 +1,6 @@
 create database EtapaProductiva;
 use EtapaProductiva;
-
+drop database EtapaProductiva; 
 
 
 create table administrador (
@@ -71,50 +71,52 @@ truncate table tecnico;
     primer_Apellido varchar (20) not null,
     segundo_Apellido varchar (20) default '',
     telefono char (10),
+    semestre varchar (10) not null,
 	cod_Tecnico_Est int,
     foreign key (cod_Tecnico_Est) references tecnico (cod_Tecnico)
     );
     
     select * from estudiante;
+    delete from estudiante where codigo_Est = 6094;
 
 -- Creacion de procediento de Estudiante con sus validaciones 
-
 delimiter //
-create procedure insertar_estudiantess(
-	in codigo_Est bigint,
-    in identificacion char(15),
-    in primer_nombre varchar(20),
-    in segundo_nombre varchar(20),
-    in primer_apellido varchar(20),
-    in segundo_apellido varchar(20),
+create procedure insertarestudiante(
+    in codigoestudiante bigint,
+    in identificacionestudiante char(15),
+    in primernombre varchar(20),
+    in segundonombre varchar(20),
+    in primerapellido varchar(20),
+    in segundoapellido varchar(20),
     in telefono char(10),
-    in cod_tecnico_est int
+    in semestre varchar(10),
+    in codtecnicoestudiante int
 )
 begin
-    declare tecnico_existente int;
-    declare estudiante_existente int;
+    declare existetecnico int;
 
-    select count(*) into tecnico_existente from tecnico where cod_tecnico = cod_tecnico_est;
+    -- verificar si el técnico existe
+    select count(*) into existetecnico from tecnico where cod_tecnico = codtecnicoestudiante;
 
-    select count(*) into estudiante_existente from estudiante where ident_estudiante = identificacion;
-
-    if tecnico_existente = 0 then
-        signal sqlstate '45000'
-        set message_text = 'El código de técnico no existe en la tabla "tecnico".';
-    elseif estudiante_existente > 0 then
-        signal sqlstate '45000'
-        set message_text = 'La identificación del estudiante ya existe en la tabla "estudiante".';
+    -- si el técnico existe, se procede a insertar el estudiante
+    if existetecnico > 0 then
+        insert into estudiante (codigo_est, ident_estudiante, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, telefono, semestre, cod_tecnico_est)
+        values (codigoestudiante, identificacionestudiante, primernombre, segundonombre, primerapellido, segundoapellido, telefono, semestre, codtecnicoestudiante);
+        
+        select 'estudiante insertado correctamente' as resultado;
     else
-    
-        insert into estudiante (codigo_Est,ident_estudiante, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, telefono, cod_tecnico_est)
-        values (codigo_Est,identificacion, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, telefono, cod_tecnico_est);
+        select 'el técnico no existe, no se puede insertar el estudiante' as resultado;
     end if;
 end //
+
 delimiter ;
+------ 
+
+
 
 DELIMITER //
-
-CREATE PROCEDURE actualizar_estudiantessss(
+	
+CREATE PROCEDURE actualizar_estudiante(
     IN codigo_est_input bigint,
     IN identificacion_input char(15),
     IN primer_nombre_input varchar(20),
@@ -122,6 +124,7 @@ CREATE PROCEDURE actualizar_estudiantessss(
     IN primer_apellido_input varchar(20),
     IN segundo_apellido_input varchar(20),
     IN telefono_input char(10),
+    IN semestre_ varchar (10),
     IN cod_tecnico_est_input int
 )
 BEGIN
@@ -140,14 +143,14 @@ BEGIN
             primer_apellido = primer_apellido_input,
             segundo_apellido = segundo_apellido_input,
             telefono = telefono_input,
+            semestre = semestre_,
             cod_tecnico_est = cod_tecnico_est_input
         WHERE codigo_est = codigo_est_input;
     END IF;
 END //
 
 DELIMITER ;
- call actualizar_estudiantessss(7870, "	1005139574", "Estefania", "Andrea", "Alvarado" ,"Chicangana", 3106124260, 74);
- 
+
 
 -- creacion de tablas de modalidades (contrato, pasantias,homologacion y proyecto)
 
@@ -164,14 +167,13 @@ create table proyecto (
 );
 
 create table homologacion (
-	cod_homolg int primary key
-    );
+cod_homolg int primary key
+);
     
 
 -- Creacion de tabla Estudiante con Contrato de Aprendizaje
 
 create table contrato_Estudiante (
-cod_contrato_Es int primary key ,	
 cod_Est_Cont bigint,
 cod_ContratoA_Est int,
 empresa_Vinculada varchar (90),
