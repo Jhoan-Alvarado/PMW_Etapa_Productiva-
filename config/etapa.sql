@@ -141,7 +141,7 @@ BEGIN
             primer_nombre = primer_nombre_input,
             segundo_nombre = segundo_nombre_input,
             primer_apellido = primer_apellido_input,
-            segundo_apellido = segundo_apellido_input,
+            segundo_apellido = segundo_apell    ido_input,
             telefono = telefono_input,
             semestre = semestre_,
             cod_tecnico_est = cod_tecnico_est_input
