@@ -38,45 +38,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
-<head>
-    <link rel="stylesheet" href="../../css/estudiante/conEstu.css">
-</head>
-<body>
-
-
-<div class="formulario_estudiantes">
-<h2>Formulario para Insertar Datos</h2>
-<form method="post" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
-    <label for="cod_Est_Cont">Código Estudiante:</label>
-    <input class="estilo" type="text" name="cod_Est_Cont" required><br>
-
-    <label for="cod_ContratoA_Est">Código Contrato Aprendizaje:</label>
-    <input class="estilo" type="text" name="cod_ContratoA_Est" required><br>
-
-    <label for="empresa_Vinculada">Empresa Vinculada:</label>
-    <input class="estilo" type="text" name="empresa_Vinculada" required><br>
-
-    <label for="fecha_Incio">Fecha Inicio:</label>
-    <input class="estilo" type="text" name="fecha_Incio" required><br>
-
-    <label for="fecha_Final">Fecha Final:</label>
-    <input class="estilo" type="text" name="fecha_Final"><br>
-
-    <label for="horarios">Horarios:</label>
-    <input class="estilo" type="text" name="horarios" required><br>
-
-    <label for="copia_Contrato">Copia Contrato:</label><br>
-
-    <input type="checkbox" name="copia_Contrato"><br>
-
-    <label for="constancia">Constancia:</label><br>
-    <input type="checkbox" name="constancia"><br>
-
-    <button type="submit" value="Insertar Datos">Enviar</button>
-</form>
-</div>
-
-</body>
 
 
 <?php include('../../vistas/footer.php'); ?>

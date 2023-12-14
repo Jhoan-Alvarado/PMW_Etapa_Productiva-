@@ -56,10 +56,7 @@ delimiter ;
 
 
 
-select * from tecnico;
-DELETE FROM tecnico WHERE cod_Tecnico  = 1;
 
-truncate table tecnico;
 
 -- creacion tabla De Estudiante 
 	
@@ -111,7 +108,7 @@ begin
 end //
 
 delimiter ;
------- 
+
 
 
 
@@ -142,7 +139,7 @@ BEGIN
             primer_nombre = primer_nombre_input,
             segundo_nombre = segundo_nombre_input,
             primer_apellido = primer_apellido_input,
-            segundo_apellido = segundo_apell    ido_input,
+            segundo_apellido = segundo_apellido_input,
             telefono = telefono_input,
             semestre = semestre_,
             cod_tecnico_est = cod_tecnico_est_input
@@ -187,15 +184,14 @@ foreign key (cod_Est_Cont) references estudiante (codigo_Est),
 foreign key (cod_ContratoA_Est) references contrato_Aprendizaje (cod_ContratoA)
 );
 
-
+delete  from contrato_Estudiante ;
 
 -- Creacion de procedimiento de almacenado de Estudiante con Contrato de Aprendizaje
 delimiter //
-create procedure insertar_contrato_estudiante(
+create procedure insertar_Contrato_Estudiante(
     in cod_contrato_es int,
-    in cod_est_cont bigint,
-    in cod_contratoa_est int,
-	in empresa_vinculada varchar(90),
+    in cod_contratoa_est int, -- Tabla p de contrato
+    in empresa_vinculada varchar(90),
     in fecha_inicio datetime,
     in fecha_final datetime,
     in horarios varchar(100),
@@ -206,23 +202,25 @@ begin
     declare estudiante_existente int;
     declare contratoa_est_existente int;
 
-    select count(*) into estudiante_existente from estudiante where codigo_est = cod_est_cont;
-
-    select count(*) into contratoa_est_existente from contrato_aprendizaje where cod_contratoa = cod_contratoa_est;
+    select count(*) into estudiante_existente from estudiante where codigo_Est = cod_contrato_es;
 
     if estudiante_existente = 0 then
         signal sqlstate '45000'
         set message_text = 'El código de estudiante no existe en la tabla "estudiante".';
-    elseif contratoa_est_existente = 0 then
-        signal sqlstate '45000'
-        set message_text = 'El código de contrato de aprendizaje no existe en la tabla "contrato_aprendizaje".';
     else
-        insert into contrato_estudiante (cod_contrato_es, cod_est_cont, cod_contratoa_est, empresa_vinculada, fecha_inicio, fecha_final, horarios, copia_contrato, constancia)
-        values (cod_contrato_es, cod_est_cont, cod_contratoa_est, empresa_vinculada, fecha_inicio, fecha_final, horarios, copia_contrato, constancia);
+        insert into contrato_Aprendizaje (cod_ContratoA) values (cod_contratoa_est);
+        select count(*) into contratoa_est_existente from contrato_Aprendizaje where cod_ContratoA = cod_contratoa_est;
+
+        if contratoa_est_existente = 0 then
+            signal sqlstate '45000'
+            set message_text = 'El código de contrato de aprendizaje no existe en la tabla "contrato_aprendizaje".';
+        else
+            insert into contrato_estudiante (cod_Est_Cont,cod_ContratoA_Est, empresa_Vinculada, fecha_Incio, fecha_Final, horarios, copia_Contrato, constancia)
+            values (cod_contrato_es, cod_contratoa_est,empresa_vinculada, fecha_inicio, fecha_final, horarios, copia_contrato, constancia);
+        end if;
     end if;
 end //
 delimiter ;
-
 
 -- Creacion de procedimiento de almacenado para actualizar contrato Con Estudiante 
 
