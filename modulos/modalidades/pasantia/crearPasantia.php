@@ -3,6 +3,11 @@
 
 
 
+<head>
+    <link rel="stylesheet" href="../../../css/estudiante/crearE.css">
+</head>
+
+
 <div class="formulario_estudiantes">
   <h1></h1>
 
@@ -20,18 +25,18 @@
     <input class="estilo" type="text" id="" name="" required maxlength="20"><br><br>
 
     <label for="">Fecha de iniciacion </label>
-    <input class="date" type="date" id="" name=""><br><br>
+    <input class="estilo" type="date" id="" name=""><br><br>
 
     <label for="">Fecha final</label>
-    <input class="date" type="date" id="" name=""><br><br>
+    <input class="estilo" type="date" id="" name=""><br><br>
 
     <label for="">Carta de presentacion</label>
-    <input type="checkbox" name ="cartaP">
+    <input  type="checkbox" name ="cartaP">
     <br>
     <br>
 
     <label for="">ARL</label>
-    <input type="checkbox" name="arl" id="">    
+    <input  type="checkbox" name="arl" id="">    
     <br>
     <br>
 
@@ -41,7 +46,7 @@
     <br>
 
     <label for="">planillas</label>
-    <input type="checkbox" name="planillas" id="">
+    <input  type="checkbox" name="planillas" id="">
     <br><br>
 
     <label for="">Constancia</label>
