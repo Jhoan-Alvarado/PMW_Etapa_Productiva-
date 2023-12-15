@@ -1,4 +1,5 @@
-<?php include("../../../config/db.php"); include("../../../vistas/header.php"); ?>
+<?php include("../../../config/db.php"); 
+include("../../../vistas/header.php"); ?>
  
 <?php 
 
