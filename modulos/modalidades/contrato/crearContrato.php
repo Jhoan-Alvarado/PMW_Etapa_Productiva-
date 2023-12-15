@@ -40,10 +40,10 @@ if (isset($_GET['id'])) {
 
     <label for="copia_Contrato">Copia Contrato:</label><br>
 
-    <input type="check" name="copia_Contrato"><br>
+    <input type="checkbox" name="copia_Contrato"><br>
     
     <label for="constancia">Constancia:</label><br>
-    <input type="check" name="constancia"><br>
+    <input type="checkbox" name="constancia"><br>
     
     <button type="submit" value="Insertar Datos">Enviar</button>
 </form>

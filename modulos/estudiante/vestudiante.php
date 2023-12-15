@@ -6,12 +6,10 @@ include("../../vistas/header.php"); ?>
 if (isset($_GET['id'])) {
     $cod_Est = $_GET['id'];
 
-    $stm = $pdo->prepare("SELECT e.codigo_Est, e.ident_Estudiante, e.primer_Nombre, e.segundo_Nombre,e.primer_Apellido, e.segundo_Apellido, e.telefono, e.semestre, t.nombre_Tecnico FROM estudiante e LEFT JOIN tecnico t ON e.cod_Tecnico_Est = t.cod_Tecnico;");
+    $stm = $pdo->prepare("SELECT e.codigo_Est, e.ident_Estudiante, e.primer_Nombre, e.segundo_Nombre, e.primer_Apellido, e.segundo_Apellido, e.telefono, e.semestre, t.nombre_Tecnico  FROM estudiante e  LEFT JOIN tecnico t ON e.cod_Tecnico_Est = t.cod_Tecnico WHERE e.codigo_Est = $cod_Est;");
     $stm->execute();
     $est = $stm->fetchAll(PDO::FETCH_ASSOC);
-
 }
-
 
 ?>
 
@@ -60,7 +58,7 @@ if (isset($_GET['id'])) {
 
         <?php
 
-        $stm = $pdo->prepare("SELECT * FROM contrato_Estudiante ce INNER JOIN estudiante e ON ce.cod_Est_Cont = e.codigo_Est INNER JOIN contrato_Aprendizaje ca ON ce.cod_ContratoA_Est = ca.cod_ContratoA ");
+        $stm = $pdo->prepare("SELECT * FROM contrato_Estudiante ce INNER JOIN estudiante e ON ce.cod_Est_Cont = e.codigo_Est INNER JOIN contrato_Aprendizaje ca ON ce.cod_ContratoA_Est = ca.cod_ContratoA  WHERE ce.cod_Est_Cont = $cod_Est ");
         $stm->execute();
         $contrato = $stm->fetchAll(PDO::FETCH_ASSOC);
 
@@ -72,7 +70,6 @@ if (isset($_GET['id'])) {
         $stm->execute();
         $proyecto = $stm->fetchAll(PDO::FETCH_ASSOC);
 
-        
         $stm = $pdo->prepare("SELECT * FROM pasantias_Estudiante pe INNER JOIN estudiante e ON pe.cod_Pas_Est = e.codigo_Est;");
         $stm->execute();
         $homologacion = $stm->fetchAll(PDO::FETCH_ASSOC);
@@ -81,23 +78,34 @@ if (isset($_GET['id'])) {
         <?php if ($contrato) { ?>
             <div class="etapa">
                 <?php foreach ($contrato as $c) { ?>
-                <ul> 
-                    <li><strong>CODIGO DE CONTRATO : </strong> <?php echo $c['cod_ContratoA_Est'] ?></li>
-                    <li><strong>EMPRESA : </strong> <?php echo $c['empresa_Vinculada'] ?></li>
-                    <li><strong>FECHA INICIO : </strong> <?php echo $c['fecha_Incio'] ?></li>
-                    <li><strong>FECHA FINAL : </strong> <?php echo $c['fecha_Final'] ?></li>
-                </ul>
-            <?php }?>
-            </div>        
-        
-            <?php } else if ($pasantia) { ?>
+                    <ul>
+                        <li><strong>CODIGO DE CONTRATO : </strong>
+                            <?php echo $c['cod_ContratoA_Est'] ?>
+                        </li>
+                        <li><strong>EMPRESA : </strong>
+                            <?php echo $c['empresa_Vinculada'] ?>
+                        </li>
+                        <li><strong>FECHA INICIO : </strong>
+                            <?php echo $c['fecha_Incio'] ?>
+                        </li>
+                        <li><strong>FECHA FINAL : </strong>
+                            <?php echo $c['fecha_Final'] ?>
+                        </li>
+                        <li><a href="../modalidades/contrato/actualizarC.php?id=<?php echo $cod_Est ?>">Actualizar Datos</a></li>
+                    </ul>
+
+                <?php }
+                $contrato = 0; ?>
+            </div>
+
+        <?php } else if ($pasantia) { ?>
                 <h4>Hay Pasantia</h4>
         <?php } else if ($proyecto) { ?>
-                <h4>Hay Proyecto</h4>
+                    <h4>Hay Proyecto</h4>
 
         <?php } else if ($homologacion) { ?>
 
-            <h4>Hay Homologacion</h4>
+                        <h4>Hay Homologacion</h4>
 
         <?php } else { ?>
 
@@ -110,8 +118,7 @@ if (isset($_GET['id'])) {
                                 <a href="../modalidades/proyecto/crearProyecto.php">Proyecto</a>
                             </div>
                         </div>
-
-        <?php } ?>
-
+        <?php }
+        $cod_Est = 0; ?>
     </div>
 </body>

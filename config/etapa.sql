@@ -274,7 +274,6 @@ Estado boolean,
 nota float,
 cod_Cita_Est bigint, 
 foreign key (cod_Cita_Est) references contrato_Estudiante (cod_Est_Cont)
-
 );
 
 
@@ -562,3 +561,5 @@ begin
     end if;
 end //
 delimiter ;
+
+

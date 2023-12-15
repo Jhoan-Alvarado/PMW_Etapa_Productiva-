@@ -53,7 +53,7 @@ $estudiantes = $stm->fetchAll(PDO::FETCH_ASSOC);
                     
                 </tr>
             <?php 
-              $estudiantes = 0; } ?>
+            $estudiantes = 0; } ?>
               </tbody>
 
 
