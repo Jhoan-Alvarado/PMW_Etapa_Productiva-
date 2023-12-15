@@ -227,6 +227,7 @@ end //
 delimiter ;
 
 -- Creacion de procedimiento de almacenado para actualizar contrato Con Estudiante 
+
 DELIMITER //
 
 CREATE PROCEDURE ActualizarContratoEstudiante (
