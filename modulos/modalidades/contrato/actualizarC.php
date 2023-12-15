@@ -1,6 +1,12 @@
 <?php include("../../../config/db.php");
 include("../../../vistas/header.php"); ?>
 
+
+<head>
+    <link rel="stylesheet" href="../../../css/estudiante/crearE.css">
+</head>
+
+
 <?php
 
 if (isset($_GET['id'])) {
@@ -11,7 +17,6 @@ if (isset($_GET['id'])) {
     $contrato = $stm->fetchAll(PDO::FETCH_ASSOC);
 
 }
-
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
