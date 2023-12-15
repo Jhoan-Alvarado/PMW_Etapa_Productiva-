@@ -12,12 +12,12 @@
 
   <form action="" method="post">
     <label for="">Fecha de solicitud</label>
-    <input class="estilo" type="date" id="" name="" required maxlength="15"><br><br>
+    <input class="date" type="text" id="" name="" required maxlength="15"><br><br>
 
     <label for="">Nombre de la empresa</label>
     <input class="estilo" type="text" id="" name="" required maxlength="20"><br><br>
 
-    <label for="">aprobado o no:</label>
+    <label for="">Estado de aprobado:</label>
     <select class="estilo" type="text" id="" name="" maxlength="20">
         <option value="si">Si</option>
         <option value="no">No</option>
@@ -30,7 +30,6 @@
  
     <button type="submit" value="Enviar">Enviar</button>
   </form>
-
 </div>
  
  
