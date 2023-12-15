@@ -187,6 +187,7 @@ foreign key (cod_ContratoA_Est) references contrato_Aprendizaje (cod_ContratoA)
 delete  from contrato_Estudiante ;
 
 -- Creacion de procedimiento de almacenado de Estudiante con Contrato de Aprendizaje
+
 delimiter //
 create procedure insertar_Contrato_Estudiante(
     in cod_contrato_es int,
