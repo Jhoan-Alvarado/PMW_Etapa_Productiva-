@@ -184,7 +184,10 @@ foreign key (cod_Est_Cont) references estudiante (codigo_Est),
 foreign key (cod_ContratoA_Est) references contrato_Aprendizaje (cod_ContratoA)
 );
 
-delete  from contrato_Estudiante ;
+select * from contrato_Estudiante ;
+select * from contrato_Aprendizaje;
+
+
 
 -- Creacion de procedimiento de almacenado de Estudiante con Contrato de Aprendizaje
 
@@ -410,14 +413,13 @@ delimiter ;
 -- Creacion de Pasantias
 
 
-create table pasantias_Estudiante (
-	cod_Pasantia_Est int primary key auto_increment,
+create table Pasantias_Estudiantess (
     fecha_Inicio datetime,
     fecha_Final datetime,
     Empresa_Vinculada varchar (100),
     Horas_Realizadas bigint, 
+    hojaVida datetime,
     horario varchar (150),
-    documentacion boolean,
     constancia_Pasantia boolean,
     carta_Presentacion boolean, 
     arl boolean,
@@ -429,49 +431,80 @@ create table pasantias_Estudiante (
     foreign key (cod_pasantia) references pasantias (cod_Pasantia)
     );
     
-    
+    select * from Pasantias_Estudiantess ;
     -- procedimeitno de insertar de pasantias con estudiante 
-    
-    delimiter //
-create procedure insertar_pasantia_estudiante(
-    in fecha_inicio datetime,
-    in fecha_final datetime,
-    in empresa_vinculada varchar(100),
-    in horas_realizadas bigint,
-    in horario varchar(150),
-    in documentacion boolean,
-    in constancia_pasantia boolean,
-    in carta_presentacion boolean,
-    in arl boolean,
-    in acuerdo_pasantia boolean,
-    in planilla boolean,
-    in cod_pas_est bigint,
-    in cod_pasantia int
+ DELIMITER //
+
+CREATE PROCEDURE InsertarPasantiaEstudiantessss(
+    IN fechaInicioParam DATETIME,
+    IN fechaFinalParam DATETIME,
+    IN empresaVinculadaParam VARCHAR(100),
+    IN horasRealizadasParam BIGINT,
+    IN hojaVidaParam DATETIME,
+    IN horarioParam VARCHAR(150),
+    IN constanciaPasantiaParam BOOLEAN,
+    IN cartaPresentacionParam BOOLEAN,
+    IN arlParam BOOLEAN,
+    IN acuerdoPasantiaParam BOOLEAN,
+	IN   planillaParam boolean,
+    IN codPasEstParam BIGINT,
+    IN codPasantiaParam INT
 )
-begin
-    declare estudiante_existente int;
-    declare pasantia_existente int;
+BEGIN
+    DECLARE existePasantia INT;
+    DECLARE existeEstudiante INT;
 
-    -- Verificar si el código de estudiante existe en la tabla "estudiante"
-    select count(*) into estudiante_existente from estudiante where codigo_est = cod_pas_est;
+    -- Verificar si el código de pasantía existe en la tabla pasantias
+    SELECT COUNT(*) INTO existePasantia FROM pasantias WHERE cod_Pasantia = codPasantiaParam;
 
-    -- Verificar si el código de pasantía existe en la tabla "pasantias"
-    select count(*) into pasantia_existente from pasantias where cod_pasantia = cod_pasantia;
+    -- Si la pasantía no existe, insertar el código de pasantía en pasantias
+    IF existePasantia = 0 THEN
+        INSERT INTO pasantias (cod_Pasantia) VALUES (codPasantiaParam);
+    END IF;
 
-    if estudiante_existente = 0 then
-        signal sqlstate '45000'
-        set message_text = 'El código de estudiante no existe en la tabla "estudiante".';
-    elseif pasantia_existente = 0 then
-        signal sqlstate '45000'
-        set message_text = 'El código de pasantía no existe en la tabla "pasantias".';
-    else
-        -- Insertar la nueva pasantía de estudiante en la tabla "pasantias_estudiante"
-        insert into pasantias_estudiante (fecha_inicio, fecha_final, empresa_vinculada, horas_realizadas, horario, documentacion, constancia_pasantia, carta_presentacion, arl, acuerdo_pasantia, planilla, cod_pas_est, cod_pasantia)
-        values (fecha_inicio, fecha_final, empresa_vinculada, horas_realizadas, horario, documentacion, constancia_pasantia, carta_presentacion, arl, acuerdo_pasantia, planilla, cod_pas_est, cod_pasantia);
-    end if;
-end //
-delimiter ; 
+    -- Verificar si el código de estudiante existe en la tabla estudiante
+    SELECT COUNT(*) INTO existeEstudiante FROM estudiante WHERE codigo_Est = codPasEstParam;
 
+    -- Si el estudiante no existe, mostrar un mensaje
+    IF existeEstudiante = 0 THEN
+        SELECT 'El código de estudiante no existe en la tabla estudiante';
+    ELSE
+        -- Realizar la inserción en pasantias_Estudiante
+        INSERT INTO Pasantias_Estudiantess (
+            fecha_Inicio,
+            fecha_Final,
+            Empresa_Vinculada,
+            Horas_Realizadas,
+            hojaVida,
+            horario,
+            constancia_Pasantia,
+            carta_Presentacion,
+            arl,
+            acuerdo_Pasantia,
+            planilla,
+            cod_Pas_Est,
+            cod_pasantia
+        ) VALUES (
+            fechaInicioParam,
+            fechaFinalParam,
+            empresaVinculadaParam,
+            horasRealizadasParam,
+            hojaVidaParam,
+            horarioParam,
+            constanciaPasantiaParam,
+            cartaPresentacionParam,
+            arlParam,
+            acuerdoPasantiaParam,
+            planillaParam,
+            codPasEstParam,
+            codPasantiaParam
+        );
+
+        SELECT 'Inserción exitosa en pasantias_Estudiante';
+    END IF;
+END //
+
+DELIMITER ;
 -- Procedimiento para actualizar pasantia con Estudianbte 
 
 delimiter //

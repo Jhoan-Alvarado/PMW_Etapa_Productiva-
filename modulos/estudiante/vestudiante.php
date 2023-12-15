@@ -62,7 +62,7 @@ if (isset($_GET['id'])) {
         $stm->execute();
         $contrato = $stm->fetchAll(PDO::FETCH_ASSOC);
 
-        $stm = $pdo->prepare("SELECT * FROM pasantias_Estudiante pe INNER JOIN estudiante e ON pe.cod_Pas_Est = e.codigo_Est;");
+        $stm = $pdo->prepare("SELECT * FROM Pasantias_Estudiantess pe INNER JOIN estudiante e ON pe.cod_Pas_Est = e.codigo_Est;");
         $stm->execute();
         $pasantia = $stm->fetchAll(PDO::FETCH_ASSOC);
 
@@ -112,9 +112,9 @@ if (isset($_GET['id'])) {
                             <h3>No Hay Una Modalidad Asignada</h3>
                             <div class="modalidad">
                                 <a href="../modalidades/contrato/crearContrato.php?id=<?php echo $cod_Est; ?>">Etapa Productiva</a>
-                                <a href="../modalidades/pasantia/crearPasantia.php">Pasantias</a>
-                                <a href="../modalidades/homolog/crearHomolog.php">Homologacion</a>
-                                <a href="../modalidades/proyecto/crearProyecto.php">Proyecto</a>
+                                <a href="../modalidades/pasantia/crearPasantia.php?id=<?php echo $cod_Est; ?>">Pasantias</a>
+                                <a href="../modalidades/homolog/crearHomolog.php?id=<?php echo $cod_Est; ?>">Homologacion</a>
+                                <a href="../modalidades/proyecto/crearProyecto.php?id=<?php echo $cod_Est; ?>">Proyecto</a>
                             </div>
                         </div>
         <?php }

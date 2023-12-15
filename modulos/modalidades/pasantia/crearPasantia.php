@@ -1,6 +1,20 @@
 <?php include("../../../config/db.php");
  include("../../../vistas/header.php"); ?>
 
+<?php 
+
+
+if (isset($_GET['id'])) {
+    $cod_Est = $_GET['id'];
+
+    $stm = $pdo->prepare("SELECT * FROM estudiante WHERE codigo_Est = $cod_Est");
+    $stm->execute();
+    $estudiante = $stm->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
+
+    ?>
 
 
 <head>
@@ -9,26 +23,29 @@
 
 
 <div class="formulario_estudiantes">
-  <h1></h1>
+<?php foreach ($estudiante as $e) { ?>
+        <h2>Formulario De Pasantia Para <?php echo $e['primer_Nombre']. "  " . $e['primer_Apellido'] ?></h2>
+        <form method="post" action="">
+    <label for="cod_Est_Past">Código Estudiante:</label>
+    <input class="estilo" type="text" value ="<?php echo $e['codigo_Est']?>"name="cod_Est_Past" readonly required><br>
 
-  <form action="" method="post">
     <label for="">Fecha de presentacion hoja de vida </label>
-    <input class="estilo" type="date" id="" name=""><br><br>
+    <input class="estilo" type="date" id="" name="hojaV"><br><br>
 
     <label for="">Empresa</label>
-    <input class="estilo" type="text" id="" name="" required maxlength="20"><br><br>
+    <input class="estilo" type="text" id="" name="empresaV" required maxlength="20"><br><br>
 
     <label for="">Horas a realizar</label>
-    <input class="estilo" type="number" id="" name="" required maxlength="20"><br><br>
+    <input class="estilo" type="number" id="" name="horasR" required maxlength="20"><br><br>
 
     <label for="">Horarios</label>
-    <input class="estilo" type="text" id="" name="" required maxlength="20"><br><br>
+    <input class="estilo" type="text" id="" name="horarios" required maxlength="20"><br><br>
 
     <label for="">Fecha de iniciacion </label>
-    <input class="estilo" type="date" id="" name=""><br><br>
+    <input class="estilo" type="date" id="" name="fechaI" required><br><br>
 
     <label for="">Fecha final</label>
-    <input class="estilo" type="date" id="" name=""><br><br>
+   <input type="date" name="fechaF" id="" class="estilo">
 
     <label for="">Carta de presentacion</label>
     <input  type="checkbox" name ="cartaP">
@@ -54,7 +71,55 @@
     <br><br>
     <button type="submit" value="Enviar">Enviar</button>
   </form>
-
+<?php }?>
 </div>
- 
+
+        <?php 
+        
+if ($_POST){
+
+    try{
+
+        
+        $codE  = $_POST["cod_Est_Past"];
+        $hojaV = $_POST["hojaV"];
+        $empresaV = $_POST["empresaV"];
+        $horasR = $_POST["horasR"];
+        $horarios =$_POST["horarios"];
+        $fechaI = $_POST["fechaI"];
+        $fechaFinal = $_POST["fechaF"];
+        $cartaP = isset($_POST["cartaP"]) ? 1 : 0;
+        $arl = isset( $_POST["arl"]) ? 1 : 0;
+        $acuerdoP = isset($_POST ["acuerdoP"]) ? 1 : 0;
+        $planillas = isset($_POST["planillas"]) ? 1 : 0;
+        $constancia = isset($_POST["constancia"]) ? 1 : 0;
+
+        $stm = $pdo->prepare("CALL InsertarPasantiaEstudiantessss(?,?,?,?,?,?,?,?,?,?,?,?,?)");
+
+        $stm->bindParam(1, $fechaI , PDO::PARAM_STR);
+        $stm->bindParam(2, $fechaFinal, PDO::PARAM_STR);
+        $stm->bindParam(3,  $empresaV , PDO::PARAM_STR);
+        $stm->bindParam(4, $horasR , PDO::PARAM_INT);
+        $stm->bindParam(5, $hojaV, PDO::PARAM_STR);
+        $stm->bindParam(6, $horarios, PDO::PARAM_STR);
+        $stm->bindParam(7, $constancia, PDO::PARAM_BOOL);
+        $stm->bindParam(8, $cartaP, PDO::PARAM_BOOL);
+        $stm->bindParam(9, $arl, PDO::PARAM_BOOL);
+        $stm->bindParam(10, $acuerdoP, PDO::PARAM_BOOL);
+        $stm->bindParam(11, $planillas, PDO::PARAM_BOOL);
+        $stm->bindParam(12,  $cod_Est , PDO::PARAM_INT);
+        $cod_pasantia = rand(1,1000);
+        $stm->bindParam(13, $cod_pasantia , PDO::PARAM_INT);
+        $stm->execute();
+        header("Location: ../../estudiante/vestudiante.php?id=$cod_Est");
+        
+    }
+    catch (Exception $e) {  
+        echo "Error". $e->getMessage() ."";
+    }
+}
+        
+
+        
+        ?>
  
