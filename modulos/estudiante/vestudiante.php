@@ -102,7 +102,6 @@ if (isset($_GET['id'])) {
                 <h4>Hay Pasantia</h4>
         <?php } else if ($proyecto) { ?>
                     <h4>Hay Proyecto</h4>
-
         <?php } else if ($homologacion) { ?>
 
                         <h4>Hay Homologacion</h4>

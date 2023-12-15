@@ -13,7 +13,7 @@ if (isset($_GET['id'])) {
     $tecnico = $stm->fetchAll(PDO::FETCH_ASSOC);
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
+      
         try {
             $iden_Estudiante = (isset($_POST["ident_Estudiante"])) ? $_POST["ident_Estudiante"] : "";
             $primer_nombre = (isset($_POST["primer_Nombre"])) ? $_POST["primer_Nombre"] : "";

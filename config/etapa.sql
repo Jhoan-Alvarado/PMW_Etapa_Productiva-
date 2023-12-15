@@ -224,48 +224,55 @@ end //
 delimiter ;
 
 -- Creacion de procedimiento de almacenado para actualizar contrato Con Estudiante 
+DELIMITER //
 
-delimiter //
-create procedure actualizar_contrato_estudiante(
-    in cod_contrato_es_ant int, 
-    in cod_est_cont int,         
-    in cod_contratoa_est int,     
-    in empresa_vinculada varchar(90),
-    in fecha_inicio datetime,
-    in fecha_final datetime,
-    in horarios varchar(100),
-    in copia_contrato boolean,
-    in constancia boolean
+CREATE PROCEDURE ActualizarContratoEstudiante (
+    IN p_cod_Est_Cont BIGINT,
+    IN p_cod_ContratoA_Est INT,
+    IN p_empresa_Vinculada VARCHAR(90),
+    IN p_fecha_Inicio DATETIME,
+    IN p_fecha_Final DATETIME,
+    IN p_horarios VARCHAR(100),
+    IN p_copia_Contrato BOOLEAN,
+    IN p_constancia BOOLEAN
 )
-begin
-    declare estudiante_existente int;
-    declare contratoa_est_existente int;
+BEGIN
+    DECLARE FOREIGN_KEY_ERROR CONDITION FOR SQLSTATE '23000';
+    
+    DECLARE EXIT HANDLER FOR FOREIGN_KEY_ERROR
+    BEGIN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Error: Clave foránea no encontrada';
+    END;
 
-    select count(*) into estudiante_existente from estudiante where codigo_est = cod_est_cont;
+    START TRANSACTION;
+    
+    -- Validar las claves foráneas antes de realizar la actualización
+    SELECT COUNT(*) INTO @estudiante_exists FROM estudiante WHERE codigo_Est = p_cod_Est_Cont;
+    SELECT COUNT(*) INTO @contrato_exists FROM contrato_Aprendizaje WHERE cod_ContratoA = p_cod_ContratoA_Est;
+    
+    IF @estudiante_exists = 0 OR @contrato_exists = 0 THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Error: Clave foránea no encontrada en una o ambas tablas referenciadas';
+    ELSE
+        -- Realizar la actualización si las claves foráneas existen
+        UPDATE contrato_Estudiante
+        SET
+            empresa_Vinculada = p_empresa_Vinculada,
+            fecha_Incio = p_fecha_Inicio,
+            fecha_Final = p_fecha_Final,
+            horarios = p_horarios,
+            copia_Contrato = p_copia_Contrato,
+            constancia = p_constancia
+        WHERE
+            cod_Est_Cont = p_cod_Est_Cont
+            AND cod_ContratoA_Est = p_cod_ContratoA_Est;
+    END IF;
 
-    select count(*) into contratoa_est_existente from contrato_aprendizaje where cod_contratoa = cod_contratoa_est;
+    COMMIT;
+END //
 
-    if estudiante_existente = 0 then
-        signal sqlstate '45000'
-        set message_text = 'El nuevo código de estudiante no existe en la tabla "estudiante".';
-    elseif contratoa_est_existente = 0 then
-        signal sqlstate '45000'
-        set message_text = 'El nuevo código de contrato de aprendizaje no existe en la tabla "contrato_aprendizaje".';
-    else
-        update contrato_estudiante
-        set cod_est_cont = cod_est_cont,
-            cod_contratoa_est = cod_contratoa_est,
-            empresa_vinculada = empresa_vinculada,
-            fecha_inicio = fecha_inicio,
-            fecha_final = fecha_final,
-            horarios = horarios,
-            copia_contrato = copia_contrato,
-            constancia = constancia
-        where cod_contrato_es = cod_contrato_es_ant;
-    end if;
-end //
-delimiter ;
-
+DELIMITER ;
 
 create table  citas_Seguimiento_Contrato (
 cod_Cita_Cont int primary key auto_increment,
