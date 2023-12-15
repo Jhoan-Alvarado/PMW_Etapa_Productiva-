@@ -1,5 +1,6 @@
 .c {
     display: grid;
+    border-radius: 25px;
     grid-template-areas:
       'top-left top-right'
       'bottom bottom';
@@ -10,20 +11,26 @@
   
   
   .info-Est {
-      border: 2px solid green;
       grid-area: top-left;
+      margin: 7px;
+      border-radius: 15px;
+      box-shadow: 0 0 7px #222;
       background-color: #f0f0f0;
     }
     
     .citas {
-      border: 2px solid green;
     grid-area: top-right;
+    margin: 7px;
+    border-radius: 15px;
+    box-shadow: 0 0 7px #222;
     background-color: #ccc;
   }
   
   .etapa {
     grid-area: bottom;
-    border: 2px solid green;
+    margin: 7px;
+    border-radius: 15px;
+    box-shadow: 0 0 7px #222;
     background-color: #999;
     display: flex;
     flex-wrap: wrap;
