@@ -7,54 +7,45 @@
 
   <form action="" method="post">
     <label for="">Fecha de presentacion hoja de vida </label>
-    <input class="date" type="text" id="" name=""><br><br>
+    <input class="estilo" type="date" id="" name=""><br><br>
 
     <label for="">Empresa</label>
     <input class="estilo" type="text" id="" name="" required maxlength="20"><br><br>
 
     <label for="">Horas a realizar</label>
-    <input class="estilo" type="text" id="" name="" required maxlength="20"><br><br>
+    <input class="estilo" type="number" id="" name="" required maxlength="20"><br><br>
 
     <label for="">Horarios</label>
     <input class="estilo" type="text" id="" name="" required maxlength="20"><br><br>
 
     <label for="">Fecha de iniciacion </label>
-    <input class="date" type="text" id="" name=""><br><br>
+    <input class="date" type="date" id="" name=""><br><br>
 
     <label for="">Fecha final</label>
-    <input class="date" type="text" id="" name=""><br><br>
+    <input class="date" type="date" id="" name=""><br><br>
 
     <label for="">Carta de presentacion</label>
-    <select class="estilo" type="text" id="" name="" maxlength="20">
-        <option value="si">Si</option>
-        <option value="no">No</option>
-    </select><br><br>
+    <input type="checkbox" name ="cartaP">
+    <br>
+    <br>
 
     <label for="">ARL</label>
-    <select class="estilo" type="text" id="" name="" maxlength="20">
-        <option value="si">Si</option>
-        <option value="no">No</option>
-    </select><br><br>
+    <input type="checkbox" name="arl" id="">    
+    <br>
+    <br>
 
     <label for="">Acuerdo de pasantia</label>
-    <select class="estilo" type="text" id="" name="" maxlength="20">
-        <option value="si">Si</option>
-        <option value="no">No</option>
-    </select><br><br>
+    <input type="checkbox" name="acuerdoP" id="">
+    <br>
+    <br>
 
     <label for="">planillas</label>
-    <select class="estilo" type="text" id="" name="" maxlength="20">
-        <option value="si">Si</option>
-        <option value="no">No</option>
-    </select><br><br>
+    <input type="checkbox" name="planillas" id="">
+    <br><br>
 
     <label for="">Constancia</label>
-    <select class="estilo" type="text" id="" name="" maxlength="20">
-        <option value="si">Si</option>
-        <option value="no">No</option>
-    </select><br><br>
-
-
+    <input type="checkbox" name="constancia" id="">
+    <br><br>
     <button type="submit" value="Enviar">Enviar</button>
   </form>
 

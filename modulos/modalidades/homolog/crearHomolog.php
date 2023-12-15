@@ -20,6 +20,8 @@
 
     <label for="">fecha en el que fue aprobado</label>
     <input class="estilo" type="date" id="" name=""><br><br>
+
+    <textarea name="mensaje" rows="6" cols="40" placeholder="OBSERVACION...."></textarea><br><br>
  
     <button type="submit" value="Enviar">Enviar</button>
   </form>

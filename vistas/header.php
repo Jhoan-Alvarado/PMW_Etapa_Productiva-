@@ -2,7 +2,7 @@
 <html lang="en">
     
     <head>
-        <link rel="stylesheet" href="../../css/header.css">
+        <link rel="stylesheet" href="/pmw/css/header.css">
     </head>
 
 <nav class="navbar">
