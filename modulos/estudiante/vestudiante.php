@@ -91,7 +91,8 @@ if (isset($_GET['id'])) {
                         <li><strong>FECHA FINAL : </strong>
                             <?php echo $c['fecha_Final'] ?>
                         </li>
-                        <li><a href="../modalidades/contrato/actualizarC.php?id=<?php echo $cod_Est ?>">Actualizar Datos</a></li>
+                        <li><a href="../modalidades/contrato/actualizarC.php?id=<?php echo $cod_Est ?>">Actualizar Datos</a>
+                        </li>
                     </ul>
 
                 <?php }
@@ -99,9 +100,60 @@ if (isset($_GET['id'])) {
             </div>
 
         <?php } else if ($pasantia) { ?>
-                <h4>Hay Pasantia</h4>
+            <?php foreach ($pasantia as $p) { ?>
+                    <div class="etapa">
+
+                        <ul>
+                            <li><strong>CODIGO DE PASANTIA: </strong>
+                            <?php echo $p['cod_pasantia'] ?>
+                            </li>
+                            <li><strong>EMPRESA : </strong>
+                            <?php echo $p['Empresa_Vinculada'] ?>
+                            </li>
+                            <li><strong>FECHA INICIO : </strong>
+                            <?php echo $p['fecha_Inicio'] ?>
+                            </li>
+                            <li><strong>FECHA FINAL : </strong>
+                            <?php echo $p['fecha_Final'] ?>
+                            </li>
+                            <li><strong>HORAS REALIZADAS : </strong>
+                            <?php echo $p['Horas_Realizadas'] ?>
+                            </li>
+                            <li><strong>HOJA DE VIDA : </strong>
+                            <?php echo $p['hojaVida'] ?>
+                            </li>
+                            <li><strong>HORARIOS : </strong>
+                            <?php echo $p['horario'] ?>
+                            </li>
+                            <li><strong>CONSTANCIA DE PASANTIA : </strong>
+                            <?php echo $p['constancia_Pasantia'] ?>
+                            </li>
+                            <li><strong>CARTA DE PRESENTACION : </strong>
+                            <?php echo $p['carta_Presentacion'] ?>
+                            </li>
+                            <li><strong>ARL : </strong>
+                            <?php echo $p['arl'] ?>
+                            </li>
+                            <li><strong>ACUERDO PASANTIA : </strong>
+                            <?php echo $p['acuerdo_Pasantia'] ?>
+                            </li>
+                            <li><strong>PLANILLAS : </strong>
+                            <?php echo $p['planilla'] ?>
+                            </li>
+                            <li> <a href="../modalidades/pasantia/actualizarP.php?id=<?php echo $cod_Est ?>">Actualizar Pasantia</a>
+                            </li>
+                        </ul>
+
+
+                <?php }
+            $pasantia = 0; ?>
+                </div>
         <?php } else if ($proyecto) { ?>
-                    <h4>Hay Proyecto</h4>
+                    <div class="etapa">
+
+
+
+                    </div>
         <?php } else if ($homologacion) { ?>
 
                         <h4>Hay Homologacion</h4>
