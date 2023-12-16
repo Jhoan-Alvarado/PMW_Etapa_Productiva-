@@ -8,9 +8,13 @@ if (isset($_GET['id'])) {
     $stm->execute();
     $estudiante = $stm->fetchAll(PDO::FETCH_ASSOC);
 
-    $stm = $pdo->prepare("SELECT * FROM tecnico");
+    $stm = $pdo->prepare("SELECT * FROM tecnico t INNER JOIN estudiante e ON e.cod_Tecnico_Est = t.cod_Tecnico WHERE e.codigo_Est = $cod_Est");
     $stm->execute();
     $tecnico = $stm->fetchAll(PDO::FETCH_ASSOC);
+
+    $stm = $pdo->prepare("SELECT * FROM tecnico");
+    $stm->execute();
+    $tecnicos = $stm->fetchAll(PDO::FETCH_ASSOC);
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       
@@ -87,11 +91,12 @@ if (isset($_GET['id'])) {
     <label class="estilo" for="">Semestre</label>
     <input type="text" name ="semestre" class="estilo" value = "<?php echo $e['semestre']?>">
 
-
-    <label class="estilo" for="">Código Técnico:</label>
+    <?php foreach ($tecnico as $r) { ?>
+    <label class="estilo" for="">Técnico: <?php echo $r['nombre_Tecnico']?></label>
+    <?php $tecnico = 0; } ?>
 
     <select class="estilo" id="cod_Tecnico_Est" name="cod_Tecnico_Est" >
-      <?php foreach ($tecnico as $t) { ?>
+      <?php foreach ($tecnicos as $t) { ?>
         <option value="<?php echo $t['cod_Tecnico']; ?>">
           <?php echo $t['nombre_Tecnico']; ?>
         </option>

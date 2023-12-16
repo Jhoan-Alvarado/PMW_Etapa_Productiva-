@@ -62,15 +62,15 @@ if (isset($_GET['id'])) {
         $stm->execute();
         $contrato = $stm->fetchAll(PDO::FETCH_ASSOC);
 
-        $stm = $pdo->prepare("SELECT * FROM Pasantias_Estudiantess pe INNER JOIN estudiante e ON pe.cod_Pas_Est = e.codigo_Est;");
+        $stm = $pdo->prepare("SELECT * FROM Pasantias_Estudiantess p INNER JOIN estudiante e ON p.cod_Pas_Est = e.codigo_Est LEFT JOIN pasantias pa ON p.cod_Pas_Est = pa.cod_Pasantia WHERE p.cod_Pas_Est = $cod_Est;");
         $stm->execute();
         $pasantia = $stm->fetchAll(PDO::FETCH_ASSOC);
 
-        $stm = $pdo->prepare("SELECT * FROM pasantias_Estudiante pe INNER JOIN estudiante e ON pe.cod_Pas_Est = e.codigo_Est;");
+        $stm = $pdo->prepare("SELECT * FROM proyecto_Estudiante pr INNER JOIN estudiante e ON pr.cod_Est_Pr = e.codigo_Est LEFT JOIN proyecto p ON pr.cod_Pro_Est = p.cod_Proyecto WHERE pr.cod_Est_Pr = $cod_Est");
         $stm->execute();
         $proyecto = $stm->fetchAll(PDO::FETCH_ASSOC);
 
-        $stm = $pdo->prepare("SELECT * FROM pasantias_Estudiante pe INNER JOIN estudiante e ON pe.cod_Pas_Est = e.codigo_Est;");
+        $stm = $pdo->prepare("SELECT * FROM homologacion_Estudiante ho INNER JOIN estudiante e ON ho.cod_Est_Homolog = e.codigo_Est LEFT JOIN homologacion h ON ho. cod_Homolog_Est = h.cod_homolg WHERE ho.cod_Est_Homolog = $cod_Est;");
         $stm->execute();
         $homologacion = $stm->fetchAll(PDO::FETCH_ASSOC);
         ?>
@@ -151,12 +151,65 @@ if (isset($_GET['id'])) {
         <?php } else if ($proyecto) { ?>
                     <div class="etapa">
 
+                <?php foreach ($proyecto as $p) { ?>
 
-
+                            <ul>
+                                <li><strong>Codigo Proyecto : </strong>
+                            <?php echo $p['cod_Pro_Est'] ?>
+                                </li>
+                                <li><strong>Nombre Del Proyecto : </strong>
+                            <?php echo $p['nombre_proyecto'] ?>
+                                </li>
+                                <li><strong>Fecha Presentacion De Trabajo Escrito : </strong>
+                            <?php echo $p['fecha_P_Trabajo'] ?>
+                                </li>
+                                <li><strong>Fecha De Sustentacion : </strong>
+                            <?php echo $p['fecha_Sustentacion'] ?>
+                                </li>
+                                <li><strong>Nota Final : </strong>
+                            <?php echo $p['nota_Final'] ?>
+                                </li>
+                                <li><strong>Observaciones : </strong>
+                            <?php echo $p['observacion_Proyecto'] ?>
+                                </li>
+                                <li><strong>Observaciones : </strong>
+                            <?php echo $p['docente_Asesoria'] ?>
+                                </li>
+                                <li><a href="../modalidades/proyecto/actualizarProyecto.php?id=<?php echo $cod_Est ?>">Actualizar Proyecto</a></li>
+                            </ul>
+                    <?php $proyecto = 0;
+                } ?>
                     </div>
         <?php } else if ($homologacion) { ?>
+                        <div class="etapa">
+                <?php foreach ($homologacion as $h) { ?>
+                                <ul>
+                                    <li><strong>CODIGO DE HOMOLOGACION : </strong>
+                            <?php echo $h['cod_Homolog_Est'] ?>
+                                    </li>
+                                    <li><strong>EMPRESA : </strong>
+                            <?php echo $h['empresa_Homolog'] ?>
+                                    </li>
+                                    <li><strong>FECHA SOLICITUD : </strong>
+                            <?php echo $h['fecha_Solicitud'] ?>
+                                    </li>
+                                    <li><strong>FECHA APROBACION : </strong>
+                            <?php echo $h['fecha_Aprobacion'] ?>
+                                    </li>
+                                    <li><strong>ESTADO : </strong>
+                            <?php echo $h['estado_Homomlogacion'] ?>
+                                    </li>
+                                    </li>
+                                    <li><strong>OBSERVACION: </strong>
+                            <?php echo $h['observaciones_Homolog'] ?>
+                                    </li>
+                                    <li><a href="../modalidades/homolog/actualizarH.php?id=<?php echo $cod_Est ?>">Actualizar Datos</a>
+                                    </li>
+                                </ul>
 
-                        <h4>Hay Homologacion</h4>
+                <?php }
+                $contrato = 0; ?>
+                        </div>
 
         <?php } else { ?>
 

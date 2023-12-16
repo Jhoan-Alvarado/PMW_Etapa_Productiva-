@@ -327,89 +327,119 @@ delimiter ;
 -- Creacion de la tabla de Homologacion Para Estudiante 
 
 create table homologacion_Estudiante (
- cod_homolog_Est int auto_increment, 
  empresa_Homolog varchar (60) not null,
- fecha_Homolog datetime ,
- estado_Homomlogacion boolean,
+ fecha_Aprobacion datetime ,
+ fecha_Solicitud datetime,
+ estado_Homomlogacion varchar (20),
  observaciones_Homolog varchar (300),
  cod_Est_Homolog bigint,
  cod_Homolog_Est int ,
- foreign key (cod_Est_Homolog) references estudiante (cod_Est),
+ foreign key (cod_Est_Homolog) references estudiante (codigo_Est),
  foreign key (cod_Homolog_Est) references homologacion (cod_homolg)
 );
 
-
+select * from estudiante;
 -- creacion del procedimiento de almacenado de homogacion con Estudiante 
-delimiter //
-create procedure insertar_homologacion_estudiante(
-    in empresa_homolog varchar(60),
-    in fecha_homolog datetime,
-    in estado_homologacion boolean,
-    in observaciones_homolog varchar(300),
-    in cod_est_homolog bigint,
-    in cod_homolog_est int
+DELIMITER //
+
+CREATE PROCEDURE InsertarHomologacion_Estudiantes(
+    IN empresa_Homolog_param VARCHAR(60),
+    IN fecha_Aprobacion_param DATETIME,
+    IN fecha_Solicitud_param DATETIME,
+    IN estado_Homomlogacion_param VARCHAR(20),
+    IN observaciones_Homolog_param VARCHAR(300),
+    IN cod_Est_Homolog_param BIGINT,
+    IN cod_Homolog_Est_param INT
 )
-begin
-    declare estudiante_existente int;
-    declare homologacion_existente int;
-    select count(*) into estudiante_existente from estudiante where codigo_est = cod_est_homolog;
-    select count(*) into homologacion_existente from homologacion where cod_homolg = cod_homolog_est;
+BEGIN
+    DECLARE homolog_exists INT;
+    DECLARE estudiante_exists INT;
 
-    if estudiante_existente = 0 then
-        signal sqlstate '45000'
-        set message_text = 'El código de estudiante no existe en la tabla "estudiante".';
-    elseif homologacion_existente = 0 then
-        signal sqlstate '45000'
-        set message_text = 'El código de homologación no existe en la tabla "homologacion".';
-    else
-        insert into homologacion_estudiante (empresa_homolog, fecha_homolog, estado_homologacion, observaciones_homolog, cod_est_homolog, cod_homolog_est)
-        values (empresa_homolog, fecha_homolog, estado_homologacion, observaciones_homolog, cod_est_homolog, cod_homolog_est);
-    end if;
-end //
-delimiter ;
+    -- Verificar si existe el código de homolog en la tabla homologacion
+    SELECT COUNT(*) INTO homolog_exists FROM homologacion WHERE cod_homolg = cod_Homolog_Est_param;
 
+    -- Verificar si existe el código de estudiante en la tabla estudiante
+    SELECT COUNT(*) INTO estudiante_exists FROM estudiante WHERE codigo_Est = cod_Est_Homolog_param;
 
+    -- Si no existe el código de homolog, insertar en homologacion
+    IF homolog_exists = 0 THEN
+        INSERT INTO homologacion (cod_homolg) VALUES (cod_Homolog_Est_param);
+    END IF;
+
+    -- Si existe el código de estudiante, realizar inserción en homologacion_Estudiante
+    IF estudiante_exists > 0 THEN
+        INSERT INTO homologacion_Estudiante (
+            empresa_Homolog,
+            fecha_Aprobacion,
+            fecha_Solicitud,
+            estado_Homomlogacion,
+            observaciones_Homolog,
+            cod_Est_Homolog,
+            cod_Homolog_Est
+        ) VALUES (
+            empresa_Homolog_param,
+            fecha_Aprobacion_param,
+            fecha_Solicitud_param,
+            estado_Homomlogacion_param,
+            observaciones_Homolog_param,
+            cod_Est_Homolog_param,
+            cod_Homolog_Est_param
+        );
+    ELSE
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'El código de estudiante no existe en la tabla estudiante.';
+    END IF;
+END //
+
+DELIMITER ;
 
 -- Creacion del procedimiento de actualizar homologacion de Estudiante
 
-delimiter //
-create procedure actualizar_homologacion_estudiante(
-    in cod_homolog_est_ant int,  
-    in empresa_homolog varchar(60),
-    in fecha_homolog datetime,
-    in estado_homologacion boolean,
-    in observaciones_homolog varchar(300),
-    in cod_est_homolog bigint,
-    in cod_homolog_est int
+DELIMITER //
+
+CREATE PROCEDURE ActualizarHomologacionEstudiantes(
+    IN empresa_Homolog_param VARCHAR(60),
+    IN fecha_Aprobacion_param DATETIME,
+    IN fecha_Solicitud_param DATETIME,
+    IN estado_Homomlogacion_param VARCHAR(20),
+    IN observaciones_Homolog_param VARCHAR(300),
+    IN cod_Homolog_Est_param INT
 )
-begin
-    declare estudiante_existente int;
-    declare homologacion_existente int;
-    select count(*) into estudiante_existente from estudiante where codigo_est = cod_est_homolog;
-    select count(*) into homologacion_existente from homologacion where cod_homolg = cod_homolog_est;
+BEGIN
+    -- Verificar si existe el registro con el cod_Homolog_Est_param en homologacion
+    SELECT COUNT(*) INTO @homolog_exists FROM homologacion WHERE cod_homolg = cod_Homolog_Est_param;
 
-    if estudiante_existente = 0 then
-        signal sqlstate '45000'
-        set message_text = 'El nuevo código de estudiante no existe en la tabla "estudiante".';
-    elseif homologacion_existente = 0 then
-        signal sqlstate '45000'
-        set message_text = 'El nuevo código de homologación no existe en la tabla "homologacion".';
-    else	
-        update homologacion_estudiante
-        set empresa_homolog = empresa_homolog,
-            fecha_homolog = fecha_homolog,
-            estado_homologacion = estado_homologacion,
-            observaciones_homolog = observaciones_homolog,
-            cod_est_homolog = cod_est_homolog,
-            cod_homolog_est = cod_homolog_est
-        where cod_homolog_est = cod_homolog_est_ant;
-    end if;
-end //
-delimiter ;
+    -- Si existe el registro en homologacion, proceder a la actualización
+    IF @homolog_exists > 0 THEN
+        -- Verificar si existe el registro con el cod_Homolog_Est_param en homologacion_Estudiante
+        SELECT COUNT(*) INTO @estudiante_exists FROM homologacion_Estudiante WHERE cod_Homolog_Est = cod_Homolog_Est_param;
+
+        -- Si el registro existe, realizar la actualización
+        IF @estudiante_exists > 0 THEN
+            UPDATE homologacion_Estudiante
+            SET empresa_Homolog = empresa_Homolog_param,
+                fecha_Aprobacion = fecha_Aprobacion_param,
+                fecha_Solicitud = fecha_Solicitud_param,
+                estado_Homomlogacion = estado_Homomlogacion_param,
+                observaciones_Homolog = observaciones_Homolog_param
+            WHERE cod_Homolog_Est = cod_Homolog_Est_param;
+        ELSE
+            SIGNAL SQLSTATE '45000'
+                SET MESSAGE_TEXT = 'El registro con el código especificado no existe en la tabla homologacion_Estudiante.';
+        END IF;
+    ELSE
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'El registro con el código especificado no existe en la tabla homologacion.';
+    END IF;
+END //
+
+DELIMITER ;
 
 
+select * from homologacion;
 
 
+SELECT h.empresa_Homolog, h.fecha_Aprobacion, h.fecha_Solicitud, h.estado_Homomlogacion, h.observaciones_Homolog, h.cod_Est_Homolog, h.cod_Homolog_Est, e.primer_Nombre, e.primer_Apellido  FROM homologacion_Estudiante h INNER JOIN estudiante e ON h.cod_Est_Homolog = e.codigo_Est WHERE cod_Est_Homolog = 7069;
 
 -- Creacion de Pasantias
 
@@ -432,6 +462,7 @@ create table Pasantias_Estudiantess (
     foreign key (cod_pasantia) references pasantias (cod_Pasantia)
     );
     
+    SELECT * FROM Pasantias_Estudiantess p INNER JOIN estudiante e ON p.cod_Pas_Est = e.codigo_Est LEFT JOIN pasantias pa ON p.cod_Pas_Est = pa.cod_Pasantia WHERE p.cod_Pas_Est = 2207 ;
     select * from Pasantias_Estudiantess ;
     -- procedimeitno de insertar de pasantias con estudiante 
  DELIMITER //
@@ -507,63 +538,62 @@ END //
 
 DELIMITER ;
 -- Procedimiento para actualizar pasantia con Estudianbte 
+DELIMITER //
 
-delimiter //
-create procedure actualizar_pasantia_estudiante(
-    in cod_pasantia_est int,
-    in fecha_inicio datetime,
-    in fecha_final datetime,
-    in empresa_vinculada varchar(100),
-    in horas_realizadas bigint,
-    in horario varchar(150),
-    in documentacion boolean,
-    in constancia_pasantia boolean,
-    in carta_presentacion boolean,
-    in arl boolean,
-    in acuerdo_pasantia boolean,
-    in planilla boolean,
-    in cod_pas_est bigint,
-    in cod_pasantia int
+CREATE PROCEDURE ActualizarPasantiaEstudiante (
+    IN fecha_Inicio DATETIME,
+    IN fecha_Final DATETIME,
+    IN Empresa_Vinculada VARCHAR(100),
+    IN Horas_Realizadas BIGINT,
+    IN hojaVida DATETIME,
+    IN horario VARCHAR(150),
+    IN constancia_Pasantia BOOLEAN,
+    IN carta_Presentacion BOOLEAN,
+    IN arl BOOLEAN,
+    IN acuerdo_Pasantia BOOLEAN,
+    IN planilla BOOLEAN,
+    IN codPasEstParam BIGINT,
+	IN codPasantiaParam INT
 )
-begin
-    declare estudiante_existente int;
-    declare pasantia_existente int;
+BEGIN
+    DECLARE estudiante_exist INT;
+    DECLARE pasantia_exist INT;
+    
+    SELECT COUNT(*)
+    INTO estudiante_exist
+    FROM estudiante
+    WHERE codigo_Est = codPasEstParam;
 
-    -- Verificar si el código de estudiante existe en la tabla "estudiante"
-    select count(*) into estudiante_existente from estudiante where codigo_est = cod_pas_est;
+    SELECT COUNT(*)
+    INTO pasantia_exist
+    FROM pasantias
+    WHERE cod_Pasantia = codPasantiaParam ;
 
-    -- Verificar si el código de pasantía existe en la tabla "pasantias"
-    select count(*) into pasantia_existente from pasantias where cod_pasantia = cod_pasantia;
-
-    if estudiante_existente = 0 then
-        signal sqlstate '45000'
-        set message_text = 'el código de estudiante no existe en la tabla "estudiante".';
-    elseif pasantia_existente = 0 then
-        signal sqlstate '45000'
-        set message_text = 'el código de pasantía no existe en la tabla "pasantias".';
-    else
-        -- Actualizar la pasantía de estudiante en la tabla "pasantias_estudiante"
-        update pasantias_estudiante
-        set fecha_inicio = fecha_inicio,
-            fecha_final = fecha_final,
-            empresa_vinculada = empresa_vinculada,
-            horas_realizadas = horas_realizadas,
+    IF estudiante_exist = 1 AND pasantia_exist = 1 THEN
+        UPDATE Pasantias_Estudiantess
+        SET 
+            fecha_Inicio = fecha_Inicio,
+            fecha_Final = fecha_Final,
+            Empresa_Vinculada = Empresa_Vinculada,
+            Horas_Realizadas = Horas_Realizadas,
+            hojaVida = hojaVida,
             horario = horario,
-            documentacion = documentacion,
-            constancia_pasantia = constancia_pasantia,
-            carta_presentacion = carta_presentacion,
+            constancia_Pasantia = constancia_Pasantia,
+            carta_Presentacion = carta_Presentacion,
             arl = arl,
-            acuerdo_pasantia = acuerdo_pasantia,
+            acuerdo_Pasantia = acuerdo_Pasantia,
             planilla = planilla,
-            cod_pas_est = cod_pas_est,
-            cod_pasantia = cod_pasantia
-        where cod_pasantia_est = cod_pasantia_est;
-    end if;
-end //
-delimiter ;
+            cod_Pas_Est = codPasEstParam,
+            cod_pasantia = codPasantiaParam
+        WHERE cod_Pas_Est = codPasEstParam;
 
+        SELECT 'Registro actualizado correctamente' AS Mensaje;
+    ELSE
+        SELECT 'Error: Una o ambas claves foráneas no existen' AS Mensaje;
+    END IF;
+END //
 
-
+DELIMITER ;
 
     
 create table  citas_Seguimiento_Pasantia (
