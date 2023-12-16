@@ -634,4 +634,121 @@ begin
 end //
 delimiter ;
 
+SELECT p.nombre_proyecto, p.docente_Asesoria, p.fecha_P_Trabajo, p.fecha_Sustentacion, p.nota_Final, p.observacion_Proyecto, p.cod_Est_Pr, p.cod_Pro_Est, e.primer_Nombre, e.primer_Apellido FROM proyecto_Estudiante p INNER JOIN estudiante e ON p.cod_Est_Pr = e.codigo_Est WHERE p.cod_Est_Pr =  9598;
+
+
+create table proyecto_Estudiante (
+nombre_proyecto varchar (300) not null, 
+docente_Asesoria varchar (90) not null,
+fecha_P_Trabajo datetime,
+fecha_Sustentacion datetime,
+nota_Final float (10,2),
+observacion_Proyecto varchar (1000),
+cod_Est_Pr bigint,
+cod_Pro_Est int,
+foreign key (cod_Est_Pr) references estudiante (codigo_Est),
+foreign key (cod_Pro_Est) references proyecto (cod_Proyecto)
+);
+
+select * from proyecto_Estudiante;
+DELIMITER //
+
+CREATE PROCEDURE InsertarProyectoYEstudiante(
+    IN nombre_proyecto_param VARCHAR(300),
+    IN docente_Asesoria_param VARCHAR(90),
+    IN fecha_P_Trabajo_param DATETIME,
+    IN fecha_Sustentacion_param DATETIME,
+    IN nota_Final_param FLOAT(10, 2),
+    IN observacion_Proyecto_param VARCHAR(1000),
+    IN cod_Est_Pr_param BIGINT,
+    IN cod_Pro_Est_param INT
+)
+BEGIN
+    DECLARE proyecto_exists INT;
+
+    -- Verificar si existe el código de proyecto en la tabla proyecto
+    SELECT COUNT(*) INTO proyecto_exists FROM proyecto WHERE cod_Proyecto = cod_Pro_Est_param;
+
+    -- Si no existe el código de proyecto, insertar en la tabla proyecto
+    IF proyecto_exists = 0 THEN
+        INSERT INTO proyecto (cod_Proyecto) VALUES (cod_Pro_Est_param);
+        SELECT 'Se ha insertado un nuevo proyecto en la tabla proyecto.';
+    ELSE
+        SELECT 'El proyecto ya existe en la tabla proyecto. No se requiere inserción.';
+    END IF;
+
+    -- Insertar en la tabla proyecto_Estudiante
+    INSERT INTO proyecto_Estudiante (
+        nombre_proyecto,
+        docente_Asesoria,
+        fecha_P_Trabajo,
+        fecha_Sustentacion,
+        nota_Final,
+        observacion_Proyecto,
+        cod_Est_Pr,
+        cod_Pro_Est
+    ) VALUES (
+        nombre_proyecto_param,
+        docente_Asesoria_param,
+        fecha_P_Trabajo_param,
+        fecha_Sustentacion_param,
+        nota_Final_param,
+        observacion_Proyecto_param,
+        cod_Est_Pr_param,
+        cod_Pro_Est_param
+    );
+
+    SELECT 'Se ha insertado un nuevo registro en la tabla proyecto_Estudiante.';
+END //
+
+DELIMITER ;
+
+
+
+
+
+DELIMITER //
+
+CREATE PROCEDURE ActualizarProyectoEstudiante(
+    IN nombre_proyecto_param VARCHAR(300),
+    IN docente_Asesoria_param VARCHAR(90),
+    IN fecha_P_Trabajo_param DATETIME,
+    IN fecha_Sustentacion_param DATETIME,
+    IN nota_Final_param FLOAT(10, 2),
+    IN observacion_Proyecto_param VARCHAR(1000),
+    IN cod_Est_Pr_param BIGINT,
+    IN cod_Pro_Est_param INT
+)
+BEGIN
+    DECLARE proyecto_exists INT;
+
+    -- Verificar si existe el código de proyecto en la tabla proyecto
+    SELECT COUNT(*) INTO proyecto_exists FROM proyecto WHERE cod_Proyecto = cod_Pro_Est_param;
+
+    -- Si no existe el código de proyecto, mostrar un mensaje y detener la actualización
+    IF proyecto_exists = 0 THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'El código de proyecto especificado no existe en la tabla proyecto. No se puede realizar la actualización.';
+    ELSE
+        -- Actualizar en la tabla proyecto_Estudiante
+        UPDATE proyecto_Estudiante
+        SET nombre_proyecto = nombre_proyecto_param,
+            docente_Asesoria = docente_Asesoria_param,
+            fecha_P_Trabajo = fecha_P_Trabajo_param,
+            fecha_Sustentacion = fecha_Sustentacion_param,
+            nota_Final = nota_Final_param,
+            observacion_Proyecto = observacion_Proyecto_param
+        WHERE cod_Est_Pr = cod_Est_Pr_param AND cod_Pro_Est = cod_Pro_Est_param;
+
+        IF ROW_COUNT() = 0 THEN
+            SIGNAL SQLSTATE '45000'
+                SET MESSAGE_TEXT = 'No se encontró el registro a actualizar en la tabla proyecto_Estudiante.';
+        ELSE
+            SELECT 'Se ha actualizado el registro en la tabla proyecto_Estudiante.';
+        END IF;
+    END IF;
+END //
+
+DELIMITER ;
+
 
