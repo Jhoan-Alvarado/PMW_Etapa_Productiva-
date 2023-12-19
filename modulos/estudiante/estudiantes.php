@@ -36,6 +36,7 @@ $estudiantes = $stm->fetchAll(PDO::FETCH_ASSOC);
                 <th>Semestre</th>
                 <th>Carrera</th>
                 <th></th>
+            </tr>
         </thead>
 
         <tbody>

@@ -73,13 +73,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input class="estilo" type="text" value="<?php echo $e['empresa_Vinculada'] ?>" name="empresa_Vinculada"
                     required><br>
 
-                <label for="fecha_Incio">Fecha Inicio:</label>
-                <input class="estilo" type="text" value="<?php echo $e['fecha_Incio'] ?>" name="fecha_Incio" required><br>
+                <label for="fecha_Incio">Fecha Inicio:  <?php echo $e['fecha_Incio'] ?></label>
+                <input class="estilo" type="datetime-local" value="<?php echo $e['fecha_Incio'] ?>" name="fecha_Incio" required><br>
 
                 <label for="fecha_Final">Fecha Final:
                     <?php echo $e['fecha_Final'] ?>
                 </label>
-                <input class="estilo" type="date" name="fecha_Final"><br>
+                <input class="estilo" type="datetime-local" name="fecha_Final" required><br>
 
                 <label for="horarios">Horarios:</label>
                 <input class="estilo" type="text" name="horarios" value="<?php echo $e['horarios'] ?>" required><br>

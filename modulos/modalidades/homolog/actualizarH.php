@@ -35,7 +35,7 @@ if (isset($_GET['id'])) {
       <input class="estilo" type="text" value="<?php echo $cod_Est ?>" name="cod_Est_Past" readonly required><br>
       
       <label for="">Fecha de solicitud : <?php echo $h['fecha_Solicitud']; ?></label>
-      <input class="estilo" type="date" id="" name="fecha_S" required maxlength="15"><br><br>
+      <input class="estilo" type="datetime-local" id="" name="fecha_S" required maxlength="15"><br><br>
 
       <label for="">Nombre de la empresa</label>
       <input class="estilo" type="text" id="" name="empresa" value="<?php echo $h['empresa_Homolog'] ?>"  required maxlength="20"><br><br>
@@ -48,7 +48,7 @@ if (isset($_GET['id'])) {
       </select><br><br>
 
       <label for="">fecha en el que fue aprobado : <?php echo $h['fecha_Aprobacion']?></label>
-      <input class="estilo" type="date" id="" value="<?php echo $h['fecha_Aprobacion'] ?>" name="fechaA"><br><br>
+      <input class="estilo" type="datetime-local" id="" value="<?php echo $h['fecha_Aprobacion'] ?>" name="fechaA"><br><br>
 
       <textarea class="estilo" name="observacion" rows="6" value="<?php echo $h['observaciones_Homolog'] ?>" cols="40" placeholder="OBSERVACION...."> <?php echo $h['observaciones_Homolog']?></textarea><br><br>
 

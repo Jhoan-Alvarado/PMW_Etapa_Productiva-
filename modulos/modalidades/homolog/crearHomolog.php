@@ -29,7 +29,7 @@ if (isset($_GET['id'])) {
       <label for="">Código Estudiante:</label>
       <input class="estilo" type="text" value="<?php echo $h['codigo_Est'] ?>" name="cod_Est_Past" readonly required><br>
       <label for="">Fecha de solicitud</label>
-      <input class="estilo" type="date" id="" name="fecha_S" required maxlength="15"><br><br>
+      <input class="estilo" type="datetime-local" id="" name="fecha_S" required maxlength="15"><br><br>
 
       <label for="">Nombre de la empresa</label>
       <input class="estilo" type="text" id="" name="empresa" required maxlength="20"><br><br>
@@ -42,7 +42,7 @@ if (isset($_GET['id'])) {
       </select><br><br>
 
       <label for="">fecha en el que fue aprobado</label>
-      <input class="estilo" type="date" id="" name="fechaA"><br><br>
+      <input class="estilo" type="datetime-local" id="" name="fechaA"><br><br>
 
       <textarea class="estilo" name="observacion" rows="6" cols="40" placeholder="OBSERVACION...."></textarea><br><br>
 

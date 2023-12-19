@@ -5,18 +5,47 @@ include("../../vistas/header.php"); ?>
 
 if (isset($_GET['id'])) {
     $cod_Est = $_GET['id'];
+   
 
     $stm = $pdo->prepare("SELECT e.codigo_Est, e.ident_Estudiante, e.primer_Nombre, e.segundo_Nombre, e.primer_Apellido, e.segundo_Apellido, e.telefono, e.semestre, t.nombre_Tecnico  FROM estudiante e  LEFT JOIN tecnico t ON e.cod_Tecnico_Est = t.cod_Tecnico WHERE e.codigo_Est = $cod_Est;");
     $stm->execute();
     $est = $stm->fetchAll(PDO::FETCH_ASSOC);
 }
 
+
+
+
+?>
+
+
+<?php
+
+$stm = $pdo->prepare("SELECT * FROM contrato_Estudiante ce INNER JOIN estudiante e ON ce.cod_Est_Cont = e.codigo_Est INNER JOIN contrato_Aprendizaje ca ON ce.cod_ContratoA_Est = ca.cod_ContratoA  WHERE ce.cod_Est_Cont = $cod_Est ");
+$stm->execute();
+$contrato = $stm->fetchAll(PDO::FETCH_ASSOC);
+
+$stm = $pdo->prepare("SELECT * FROM Pasantias_Estudiantess p INNER JOIN estudiante e ON p.cod_Pas_Est = e.codigo_Est LEFT JOIN pasantias pa ON p.cod_Pas_Est = pa.cod_Pasantia WHERE p.cod_Pas_Est = $cod_Est;");
+$stm->execute();
+$pasantia = $stm->fetchAll(PDO::FETCH_ASSOC);
+
+$stm = $pdo->prepare("SELECT * FROM proyecto_Estudiante pr INNER JOIN estudiante e ON pr.cod_Est_Pr = e.codigo_Est LEFT JOIN proyecto p ON pr.cod_Pro_Est = p.cod_Proyecto WHERE pr.cod_Est_Pr = $cod_Est");
+$stm->execute();
+$proyecto = $stm->fetchAll(PDO::FETCH_ASSOC);
+
+$stm = $pdo->prepare("SELECT * FROM homologacion_Estudiante ho INNER JOIN estudiante e ON ho.cod_Est_Homolog = e.codigo_Est LEFT JOIN homologacion h ON ho. cod_Homolog_Est = h.cod_homolg WHERE ho.cod_Est_Homolog = $cod_Est;");
+$stm->execute();
+$homologacion = $stm->fetchAll(PDO::FETCH_ASSOC);
+
+$stm = $pdo->prepare("SELECT * FROM citas_Seguimiento_Pasantias WHERE cod_Pas_Est =  $cod_Est");
+$stm->execute();
+$citaPasantia = $stm->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <head>
-    <link rel="stylesheet" href="../../css/estudiante/vestudiante.css">
+    <link rel="stylesheet" href="../../css/estudiante/v.css">
 </head>
-
+ 
 <body>
 
     <div class="c">
@@ -54,29 +83,54 @@ if (isset($_GET['id'])) {
                 </div>
             <?php } ?>
         </div>
-        <div class="citas"></div>
+        <div class="citas">
+               
+                <?php 
+                if ($contrato){ ?>
 
-        <?php
+              
+                        
+                        
+                        
+                        <?php } else if ($pasantia) {?>
+                
+                            <div class="crear">
+                        <a href="../seguimiento/citas_Pasantia/crearC_Pasantia.php?id=<?php echo $cod_Est ?>">Crear Cita </a>
+                        
+                    </div>
+                <div class="cita-info">  
+                        <?php foreach ($citaPasantia as $c) {?>
+                        <ul>
+                            <li><?php echo $c["cod_Cita_Cont"] ?></li>
+                            <li><?php echo $c["fecha_Realizada"] ?></li>
+                            <li><?php echo $c["Estado"] ?></li>
+                            <li><a href="../seguimiento/citas_Pasantia/actualizarC_Pasantia.php?id=<?php echo $cod_Est?>&cod=<?php echo $c["cod_Cita_Cont"]?>">Ver mas</a></li>
+                        </ul> 
+                        
+                        <?php }?>
+                            <?php } else if ($homologacion){?>    
+                                
+                                <h2>Homologacion</h2>
+                                
+                                <?php } else if ($proyecto){ ?>
+                                    
+                                    <h2>proyecto</h2>
+                                    
+                                    <?php } else {?>
+                                        
+                                        <h2>Elija una modalidad para ver sus citas</h2>
+                                        
+                                        <?php }?>
+                                        
+                    </div>
+                                        
+        </div> 
 
-        $stm = $pdo->prepare("SELECT * FROM contrato_Estudiante ce INNER JOIN estudiante e ON ce.cod_Est_Cont = e.codigo_Est INNER JOIN contrato_Aprendizaje ca ON ce.cod_ContratoA_Est = ca.cod_ContratoA  WHERE ce.cod_Est_Cont = $cod_Est ");
-        $stm->execute();
-        $contrato = $stm->fetchAll(PDO::FETCH_ASSOC);
+    <div class="etapa">
 
-        $stm = $pdo->prepare("SELECT * FROM Pasantias_Estudiantess p INNER JOIN estudiante e ON p.cod_Pas_Est = e.codigo_Est LEFT JOIN pasantias pa ON p.cod_Pas_Est = pa.cod_Pasantia WHERE p.cod_Pas_Est = $cod_Est;");
-        $stm->execute();
-        $pasantia = $stm->fetchAll(PDO::FETCH_ASSOC);
-
-        $stm = $pdo->prepare("SELECT * FROM proyecto_Estudiante pr INNER JOIN estudiante e ON pr.cod_Est_Pr = e.codigo_Est LEFT JOIN proyecto p ON pr.cod_Pro_Est = p.cod_Proyecto WHERE pr.cod_Est_Pr = $cod_Est");
-        $stm->execute();
-        $proyecto = $stm->fetchAll(PDO::FETCH_ASSOC);
-
-        $stm = $pdo->prepare("SELECT * FROM homologacion_Estudiante ho INNER JOIN estudiante e ON ho.cod_Est_Homolog = e.codigo_Est LEFT JOIN homologacion h ON ho. cod_Homolog_Est = h.cod_homolg WHERE ho.cod_Est_Homolog = $cod_Est;");
-        $stm->execute();
-        $homologacion = $stm->fetchAll(PDO::FETCH_ASSOC);
-        ?>
-
+        
         <?php if ($contrato) { ?>
-            <div class="etapa">
+            <!-- <div class="etapa"> -->
                 <?php foreach ($contrato as $c) { ?>
                     <ul>
                         <li><strong>CODIGO DE CONTRATO : </strong>
@@ -97,11 +151,11 @@ if (isset($_GET['id'])) {
 
                 <?php }
                 $contrato = 0; ?>
-            </div>
+            <!-- </div> -->
 
         <?php } else if ($pasantia) { ?>
             <?php foreach ($pasantia as $p) { ?>
-                    <div class="etapa">
+                    <!-- <div class="etapa"> -->
 
                         <ul>
                             <li><strong>CODIGO DE PASANTIA: </strong>
@@ -143,15 +197,15 @@ if (isset($_GET['id'])) {
                             <li> <a href="../modalidades/pasantia/actualizarP.php?id=<?php echo $cod_Est ?>">Actualizar Pasantia</a>
                             </li>
                         </ul>
-
+                <!-- </div> -->
 
                 <?php }
             $pasantia = 0; ?>
                 </div>
         <?php } else if ($proyecto) { ?>
-                    <div class="etapa">
+                <!-- <div class="etapa"> -->
 
-                <?php foreach ($proyecto as $p) { ?>
+                    <?php foreach ($proyecto as $p) { ?>
 
                             <ul>
                                 <li><strong>Codigo Proyecto : </strong>
@@ -178,10 +232,10 @@ if (isset($_GET['id'])) {
                                 <li><a href="../modalidades/proyecto/actualizarProyecto.php?id=<?php echo $cod_Est ?>">Actualizar Proyecto</a></li>
                             </ul>
                     <?php $proyecto = 0;
-                } ?>
-                    </div>
+                    } ?>
+                    <!-- </div> -->
         <?php } else if ($homologacion) { ?>
-                        <div class="etapa">
+                        <!-- <div class="etapa"> -->
                 <?php foreach ($homologacion as $h) { ?>
                                 <ul>
                                     <li><strong>CODIGO DE HOMOLOGACION : </strong>
@@ -209,11 +263,11 @@ if (isset($_GET['id'])) {
 
                 <?php }
                 $contrato = 0; ?>
-                        </div>
+                        <!-- </div> -->
 
         <?php } else { ?>
 
-                        <div class="etapa">
+                        <!-- <div class="etapa"> -->
                             <h3>No Hay Una Modalidad Asignada</h3>
                             <div class="modalidad">
                                 <a href="../modalidades/contrato/crearContrato.php?id=<?php echo $cod_Est; ?>">Etapa Productiva</a>
@@ -221,8 +275,9 @@ if (isset($_GET['id'])) {
                                 <a href="../modalidades/homolog/crearHomolog.php?id=<?php echo $cod_Est; ?>">Homologacion</a>
                                 <a href="../modalidades/proyecto/crearProyecto.php?id=<?php echo $cod_Est; ?>">Proyecto</a>
                             </div>
-                        </div>
+                        <!-- </div> -->
         <?php }
         $cod_Est = 0; ?>
     </div>
+
 </body>

@@ -31,10 +31,10 @@ if (isset($_GET['id'])) {
     <input class="estilo" type="text" name="empresa_Vinculada" required><br>
 
     <label for="fecha_Incio">Fecha Inicio:</label>
-    <input class="estilo" type="date" name="fecha_Incio" required><br>
+    <input class="estilo" type="datetime-local" name="fecha_Incio" required><br>
 
     <label for="fecha_Final">Fecha Final:</label>
-    <input class="estilo" type="date" name="fecha_Final"><br>
+    <input class="estilo" type="datetime-local" name="fecha_Final"><br>
 
     <label for="horarios">Horarios:</label>
     <input class="estilo" type="text" name="horarios" required><br>

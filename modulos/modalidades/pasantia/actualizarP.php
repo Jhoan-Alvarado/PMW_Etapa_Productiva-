@@ -70,7 +70,7 @@ if (isset($_GET["id"])){
             <input type="text" name="cod_pasantia" value ="<?php echo $e['cod_Pasantia'] ?>" id=""> <br> <br>
 
             <label for="">Fecha de presentacion hoja de vida : <?php echo $e['hojaVida'] ?> </label>
-            <input class="estilo" type="date" id="" value=" <?php echo $e['hojaVida'] ?>" name="hojaV"><br><br>
+            <input class="estilo" type="datetime-local" id="" value=" <?php echo $e['hojaVida'] ?>" name="hojaV"><br><br>
 
             <label for="">Empresa</label>
             <input class="estilo" type="text" id="" value=" <?php echo $e['empresa_Vinculada'] ?>" name="empresaV" required maxlength="20"><br><br>
@@ -82,10 +82,10 @@ if (isset($_GET["id"])){
             <input class="estilo" type="text" id="" name="horarios" value=" <?php echo $e['horario'] ?>" required maxlength="20"><br><br>
 
             <label for="">Fecha de iniciacion :  <?php echo $e['hojaVida'] ?> </label>
-            <input class="estilo" type="date" id="" name="fechaI" value="<?php echo $e['fecha_Inicio']?>" required><br><br>
+            <input class="estilo" type="datetime-local" id="" name="fechaI" value="<?php echo $e['fecha_Inicio']?>" required><br><br>
 
             <label for="">Fecha final : <?php echo $e['fecha_Final'] ?></label>
-            <input type="date" name="fechaF" id="" value =" <?php echo $e['fecha_Final'] ?>"class="estilo">
+            <input type="datetime-local" name="fechaF" id="" value =" <?php echo $e['fecha_Final'] ?>"class="estilo">
 
             <label for="">Carta de presentacion :  <?php echo $e['carta_Presentacion'] ?></label>
             <input type="checkbox" name="cartaP">

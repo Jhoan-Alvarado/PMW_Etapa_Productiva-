@@ -3,7 +3,7 @@
 <?php
 
 
-if (isset($_GET["id"])){
+if (isset($_GET["id"] )){
     $cod_Est = $_GET['id'];
 
 
@@ -37,10 +37,10 @@ if (isset($_GET["id"])){
       <input class="estilo" type="text" id="" required value="<?php echo $e['docente_Asesoria']?>" name="docente" maxlength="20"><br><br>
 
       <label for="">fecha de presentacion trabajo escrito : <?php echo $e['fecha_P_Trabajo']?></label>
-      <input class="estilo" type="date" id="" value="<?php echo $e['fecha_P_Trabajo']?>" required name="fechaTE"><br><br>
+      <input class="estilo" type="datetime-local" id="" value="<?php echo $e['fecha_P_Trabajo']?>" required name="fechaTE"><br><br>
 
       <label for="">fecha de sustentacion : <?php echo $e['fecha_Sustentacion']?></label>
-      <input class="estilo" type="date" id="" value="<?php echo $e['fecha_Sustentacion']?>" name="fechaST" required><br><br>
+      <input class="estilo" type="datetime-local" id="" value="<?php echo $e['fecha_Sustentacion']?>" name="fechaST" required><br><br>
 
       <label for="">Nota Final </label>
       <input class="estilo" type="text" value="<?php echo $e['nota_Final']?>" step="0.01" id="" name="notaF"><br><br>

@@ -279,14 +279,15 @@ END //
 DELIMITER ;
 
 create table  citas_Seguimiento_Contrato (
-cod_Cita_Cont int primary key auto_increment,
+cod_Cita_Cont int primary key,
 fecha_Realizada datetime,
 responsable_Cita varchar (50) not null,
-Estado boolean,
+Estado varchar (20),
 nota float,
 cod_Cita_Est bigint, 
 foreign key (cod_Cita_Est) references contrato_Estudiante (cod_Est_Cont)
 );
+
 
 
 --  procedimientos de almacenado de cita Contrato
@@ -595,44 +596,90 @@ END //
 
 DELIMITER ;
 
+
     
-create table  citas_Seguimiento_Pasantia (
-cod_Cita_Cont int primary key auto_increment,
+create table  citas_Seguimiento_Pasantias (
+cod_Cita_Cont int primary key,
 fecha_Realizada datetime,
 responsable_Cita varchar (50) not null,
-Estado boolean,
+Estado varchar (20),
 nota float,
+observaciones varchar (900),
 cod_Pas_Est bigint, 
-foreign key (cod_Pas_Est) references pasantias_Estudiante (cod_Pas_Est)
-
+foreign key (cod_Pas_Est) references Pasantias_Estudiantess(cod_Pas_Est)
 );
 
 -- Procedimietno de almacenado de citas_Pasanias
+DELIMITER //
 
-delimiter //
-create procedure insertar_cita_seguimiento_pasantia(
-    in fecha_realizada datetime,
-    in responsable_cita varchar(50),
-    in estado boolean,
-    in nota float,
-    in cod_pas_est bigint
+CREATE PROCEDURE InsertarCitasPasantias(
+    IN p_codCitaCont INT,
+    IN p_fechaRealizada DATETIME,
+    IN p_responsableCita VARCHAR(50),
+    IN p_estado VARCHAR(20),
+    IN p_nota FLOAT,
+    IN p_observaciones VARCHAR(900),
+    IN p_codPasEst BIGINT
 )
-begin
-    declare estudiante_existente int;
+BEGIN
+    DECLARE error_message VARCHAR(200);
 
-    -- Verificar si el código de pasantía de estudiante existe en la tabla "pasantias_estudiante"
-    select count(*) into estudiante_existente from pasantias_estudiante where cod_pas_est = cod_pas_est;
+    -- Verificar si la clave primaria ya existe
+    IF EXISTS (SELECT 1 FROM citas_Seguimiento_Pasantia WHERE cod_Cita_Cont = p_codCitaCont) THEN
+        SET error_message = 'El código de cita ya existe.';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message;
+    END IF;
 
-    if estudiante_existente = 0 then
-        signal sqlstate '45000'
-        set message_text = 'el código de pasantía de estudiante no existe en la tabla "pasantias_estudiante".';
-    else
-        -- Insertar una nueva cita de seguimiento en la tabla "citas_seguimiento_pasantia"
-        insert into citas_seguimiento_pasantia (fecha_realizada, responsable_cita, estado, nota, cod_pas_est)
-        values (fecha_realizada, responsable_cita, estado, nota, cod_pas_est);
-    end if;
-end //
-delimiter ;
+    INSERT INTO citas_Seguimiento_Pasantias (cod_Cita_Cont, fecha_Realizada, responsable_Cita, Estado, nota, observaciones, cod_Pas_Est)
+    VALUES (p_codCitaCont, p_fechaRealizada, p_responsableCita, p_estado, p_nota, p_observaciones, p_codPasEst);
+END //
+
+DELIMITER ;
+
+-- Actualizacion de citas pasantias
+
+DELIMITER //
+
+CREATE PROCEDURE ActualizarCitaPasantia(
+    IN p_codCitaCont INT,
+    IN p_fechaRealizada DATETIME,
+    IN p_responsableCita VARCHAR(50),
+    IN p_estado VARCHAR(20),
+    IN p_nota FLOAT,
+    IN p_observaciones VARCHAR(900),
+    IN p_codPasEst BIGINT
+)
+BEGIN
+    DECLARE error_message VARCHAR(200);
+
+    -- Verificar si la clave primaria a actualizar existe
+    IF NOT EXISTS (SELECT 1 FROM citas_Seguimiento_Pasantias WHERE cod_Cita_Cont = p_codCitaCont) THEN
+        SET error_message = 'La cita que intenta actualizar no existe.';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message;
+    END IF;
+
+    -- Verificar si el valor de la clave foránea existe en la tabla referenciada
+    IF NOT EXISTS (SELECT 1 FROM Pasantias_Estudiantess WHERE cod_Pas_Est = p_codPasEst) THEN
+        SET error_message = 'El valor de la clave foránea no existe en la tabla referenciada.';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message;
+    END IF;
+
+    -- Actualizar los datos si las validaciones son exitosas
+    UPDATE citas_Seguimiento_Pasantias
+    SET fecha_Realizada = p_fechaRealizada,
+        responsable_Cita = p_responsableCita,
+        Estado = p_estado,
+        nota = p_nota,
+        observaciones = p_observaciones,
+        cod_Pas_Est = p_codPasEst
+    WHERE cod_Cita_Cont = p_codCitaCont;
+END //
+
+DELIMITER ;
+
+
+
+
 
 SELECT p.nombre_proyecto, p.docente_Asesoria, p.fecha_P_Trabajo, p.fecha_Sustentacion, p.nota_Final, p.observacion_Proyecto, p.cod_Est_Pr, p.cod_Pro_Est, e.primer_Nombre, e.primer_Apellido FROM proyecto_Estudiante p INNER JOIN estudiante e ON p.cod_Est_Pr = e.codigo_Est WHERE p.cod_Est_Pr =  9598;
 
