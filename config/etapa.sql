@@ -4,35 +4,34 @@ drop database EtapaProductiva;
 
 
 create table administrador (
-ident_Admin char(12) primary key,
-nombre_Admin varchar (30) default 'AdminPMW',
+nombre_Admin varchar (30) default 'AdminPMW' primary key,
 contrasenia varchar (255) not null
 ); 
 
-/*Procedimiento de almacenado  para la tabla de Administrador*/
+insert into administrador values ("AdminPMW", "123");
+
+select * from administrador;
+ call ValidadorrCredenciales ("AdminPMW", "123");
+
 DELIMITER //
-create procedure  InsertarAdministrador(
-    in identificacion char(12),
-    in nombre varchar(30),
-    in contrasenia varchar(255)
+CREATE PROCEDURE ValidadorrCredenciales(
+    IN p_nombre_Admin VARCHAR(30),
+    IN p_contrasenia VARCHAR(255)
 )
-begin
-    declare  identificacion_existente INT;
-    select count(*) into identificacion_existente from administrador where ident_Admin = identificacion;
-    if identificacion_existente > 0 then
-        signal sqlstate '45000'
-        set message_text = 'La identificación ya existe en la tabla administrador.';
-    else
-        insert into administrador (ident_Admin, nombre_Admin, contrasenia)
-        VALUES (identificacion, nombre, contrasenia);
-     end if;
-end //
+BEGIN
+    DECLARE contador INT;
+
+    SELECT COUNT(*) INTO contador
+    FROM administrador
+    WHERE nombre_Admin = p_nombre_Admin AND contrasenia = p_contrasenia;
+
+    IF contador > 0 THEN
+        SELECT 'Credenciales válidas' AS Mensaje;
+    ELSE
+        SELECT 'Credenciales inválidas' AS Mensaje;
+    END IF;
+END //
 DELIMITER ;
-
-call  InsertarAdministrador ('123456', 'Alejandro', 'dndnwaqdqwd');
-
-
-
  
 /*Creacion de tabla para Almacenar Tecnicos */
 create table tecnico (
