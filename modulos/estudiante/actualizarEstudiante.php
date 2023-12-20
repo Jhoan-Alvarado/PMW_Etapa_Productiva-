@@ -47,7 +47,7 @@ if (isset($_GET['id'])) {
             $stm->bindParam(8, $semestre, PDO::PARAM_STR);
             $stm->bindParam(9,$cod_tecnico, PDO::PARAM_INT);
             $stm->execute();
-            header("Location: estudiantes.php");
+            header("Location: vestudiante.php?id=$cod_Est");
             exit;
     
         }
