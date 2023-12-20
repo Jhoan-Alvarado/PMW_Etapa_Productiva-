@@ -1,6 +1,14 @@
 <?php include('../../config/db.php');
 include("../../vistas/header.php");
 
+session_start();
+
+if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
+    header("Location: /pmw/index.php"); 
+    exit();
+}
+
+
 if (isset($_GET['id'])) {
     $cod_Est = $_GET['id'];
 

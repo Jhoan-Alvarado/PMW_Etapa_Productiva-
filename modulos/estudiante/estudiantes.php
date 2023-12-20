@@ -1,4 +1,14 @@
-<?php include ('../../config/db.php'); 
+<?php 
+
+session_start();
+
+
+if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
+    header("Location: login.php"); // Redireccionar a la página de inicio de sesión si no ha iniciado sesión
+    exit();
+}
+
+include ('../../config/db.php'); 
 include("../../vistas/header.php");
 
 $stm = $pdo->prepare("SELECT e.codigo_Est, e.ident_Estudiante, e.primer_Nombre, e.segundo_Nombre,e.primer_Apellido, e.segundo_Apellido, e.telefono, e.semestre, t.nombre_Tecnico FROM estudiante e LEFT JOIN tecnico t ON e.cod_Tecnico_Est = t.cod_Tecnico;");

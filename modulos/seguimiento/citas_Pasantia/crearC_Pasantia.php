@@ -70,12 +70,41 @@ if (isset($_GET['id'])) {
             $stm->bindParam(7, $cod_Est, PDO::PARAM_INT);
             $stm->execute();
 
+<<<<<<< HEAD
             // Show success alert
             echo '<script>showAlert("Cita agregada con éxito", "success");</script>';
         } catch (PDOException $e) {
             // Show error alert
             echo '<script>showAlert("Error al agregar la cita: ' . $e->getMessage() . '", "error");</script>';
         }
+=======
+if ($_POST){
+
+      try{
+
+          $cod = $_POST['codCita'];
+          $fecha = $_POST['fecha'];
+          $responsable = $_POST['responsable'];
+          $estado =$_POST['estado'];
+          $n = $_POST['nota'];
+          $nota = floatval($n);
+          $observacion = $_POST['observaciones'];
+
+          $stm = $pdo->prepare('CALL InsertarCitasPasantias(?,?,?,?,?,?,?)');
+          $stm->bindParam(1,$cod, PDO::PARAM_INT);
+          $stm->bindParam(2,$fecha, PDO::PARAM_STR);
+          $stm->bindParam(3,$responsable, PDO::PARAM_STR);
+          $stm->bindParam(4, $estado, PDO::PARAM_STR);
+          $stm->bindParam(5, $nota, PDO::PARAM_STR);
+          $stm->bindParam(6, $observacion, PDO::PARAM_STR);
+          $stm->bindParam(7, $cod_Est, PDO::PARAM_INT);
+          $stm->execute();
+          header("Location: ../../estudiante/vestudiante.php?id=$cod_Est");
+
+      }
+catch(PDOException $e) {
+      echo"ERROR". $e->getMessage();
+>>>>>>> 32d15d1b96839d01dddadcea62b4da7f9f803722
     }
     ?>
 </body>

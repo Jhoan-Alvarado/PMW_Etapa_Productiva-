@@ -4,35 +4,34 @@ drop database EtapaProductiva;
 
 
 create table administrador (
-ident_Admin char(12) primary key,
-nombre_Admin varchar (30) default 'AdminPMW',
+nombre_Admin varchar (30) default 'AdminPMW' primary key,
 contrasenia varchar (255) not null
 ); 
 
-/*Procedimiento de almacenado  para la tabla de Administrador*/
+insert into administrador values ("AdminPMW", "123");
+
+select * from administrador;
+ call ValidadorrCredenciales ("AdminPMW", "123");
+
 DELIMITER //
-create procedure  InsertarAdministrador(
-    in identificacion char(12),
-    in nombre varchar(30),
-    in contrasenia varchar(255)
+CREATE PROCEDURE ValidadorrCredenciales(
+    IN p_nombre_Admin VARCHAR(30),
+    IN p_contrasenia VARCHAR(255)
 )
-begin
-    declare  identificacion_existente INT;
-    select count(*) into identificacion_existente from administrador where ident_Admin = identificacion;
-    if identificacion_existente > 0 then
-        signal sqlstate '45000'
-        set message_text = 'La identificación ya existe en la tabla administrador.';
-    else
-        insert into administrador (ident_Admin, nombre_Admin, contrasenia)
-        VALUES (identificacion, nombre, contrasenia);
-     end if;
-end //
+BEGIN
+    DECLARE contador INT;
+
+    SELECT COUNT(*) INTO contador
+    FROM administrador
+    WHERE nombre_Admin = p_nombre_Admin AND contrasenia = p_contrasenia;
+
+    IF contador > 0 THEN
+        SELECT 'Credenciales válidas' AS Mensaje;
+    ELSE
+        SELECT 'Credenciales inválidas' AS Mensaje;
+    END IF;
+END //
 DELIMITER ;
-
-call  InsertarAdministrador ('123456', 'Alejandro', 'dndnwaqdqwd');
-
-
-
  
 /*Creacion de tabla para Almacenar Tecnicos */
 create table tecnico (
@@ -93,10 +92,10 @@ create procedure insertarestudiante(
 begin
     declare existetecnico int;
 
-    -- verificar si el técnico existe
+
     select count(*) into existetecnico from tecnico where cod_tecnico = codtecnicoestudiante;
 
-    -- si el técnico existe, se procede a insertar el estudiante
+   
     if existetecnico > 0 then
         insert into estudiante (codigo_est, ident_estudiante, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, telefono, semestre, cod_tecnico_est)
         values (codigoestudiante, identificacionestudiante, primernombre, segundonombre, primerapellido, segundoapellido, telefono, semestre, codtecnicoestudiante);
@@ -194,7 +193,7 @@ select * from contrato_Aprendizaje;
 delimiter //
 create procedure insertar_Contrato_Estudiante(
     in cod_contrato_es int,
-    in cod_contratoa_est int, -- Tabla p de contrato
+    in cod_contratoa_est int, 
     in empresa_vinculada varchar(90),
     in fecha_inicio datetime,
     in fecha_final datetime,
@@ -251,7 +250,7 @@ BEGIN
 
     START TRANSACTION;
     
-    -- Validar las claves foráneas antes de realizar la actualización
+   
     SELECT COUNT(*) INTO @estudiante_exists FROM estudiante WHERE codigo_Est = p_cod_Est_Cont;
     SELECT COUNT(*) INTO @contrato_exists FROM contrato_Aprendizaje WHERE cod_ContratoA = p_cod_ContratoA_Est;
     
@@ -259,7 +258,7 @@ BEGIN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'Error: Clave foránea no encontrada en una o ambas tablas referenciadas';
     ELSE
-        -- Realizar la actualización si las claves foráneas existen
+       
         UPDATE contrato_Estudiante
         SET
             empresa_Vinculada = p_empresa_Vinculada,
@@ -278,15 +277,83 @@ END //
 
 DELIMITER ;
 
-create table  citas_Seguimiento_Contrato (
+create table  citas_Seguimientos_Contratos (
 cod_Cita_Cont int primary key,
 fecha_Realizada datetime,
 responsable_Cita varchar (50) not null,
 Estado varchar (20),
 nota float,
+observaciones varchar (900),
 cod_Cita_Est bigint, 
 foreign key (cod_Cita_Est) references contrato_Estudiante (cod_Est_Cont)
 );
+
+DELIMITER //
+
+CREATE PROCEDURE InsertarCitasContrato(
+    IN p_codCitaCont INT,
+    IN p_fechaRealizada DATETIME,
+    IN p_responsableCita VARCHAR(50),
+    IN p_estado VARCHAR(20),
+    IN p_nota FLOAT,
+    IN p_observaciones VARCHAR(900),
+    IN p_codCitaEst BIGINT
+)
+BEGIN
+    DECLARE error_message VARCHAR(200);
+
+   
+    IF EXISTS (SELECT 1 FROM citas_Seguimientos_Contratos WHERE cod_Cita_Cont = p_codCitaCont) THEN
+        SET error_message = 'El código de cita ya existe.';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message;
+    END IF;
+
+    
+    INSERT INTO citas_Seguimientos_Contratos (cod_Cita_Cont, fecha_Realizada, responsable_Cita, Estado, nota, observaciones, cod_Cita_Est)
+    VALUES (p_codCitaCont, p_fechaRealizada, p_responsableCita, p_estado, p_nota, p_observaciones, p_codCitaEst);
+END //
+
+DELIMITER ;
+
+
+
+DELIMITER //
+
+CREATE PROCEDURE ActualizarCitaContrato(
+    IN p_codCitaCont INT,
+    IN p_fechaRealizada DATETIME,
+    IN p_responsableCita VARCHAR(50),
+    IN p_estado VARCHAR(20),
+    IN p_nota FLOAT,
+    IN p_observaciones VARCHAR(900),
+    IN p_codCitaEst BIGINT
+)
+BEGIN
+    DECLARE error_message VARCHAR(200);
+
+    
+    IF NOT EXISTS (SELECT 1 FROM citas_Seguimientos_Contratos WHERE cod_Cita_Cont = p_codCitaCont) THEN
+        SET error_message = 'La cita que intenta actualizar no existe.';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message;
+    END IF;
+
+   
+    IF NOT EXISTS (SELECT 1 FROM contrato_Estudiante WHERE cod_Est_Cont = p_codCitaEst) THEN
+        SET error_message = 'El valor de la clave foránea no existe en la tabla referenciada.';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message;
+    END IF;
+
+    UPDATE citas_Seguimientos_Contratos
+    SET fecha_Realizada = p_fechaRealizada,
+        responsable_Cita = p_responsableCita,
+        Estado = p_estado,
+        nota = p_nota,
+        observaciones = p_observaciones,
+        cod_Cita_Est = p_codCitaEst
+    WHERE cod_Cita_Cont = p_codCitaCont;
+END //
+
+DELIMITER ;
 
 
 
@@ -356,18 +423,18 @@ BEGIN
     DECLARE homolog_exists INT;
     DECLARE estudiante_exists INT;
 
-    -- Verificar si existe el código de homolog en la tabla homologacion
+   
     SELECT COUNT(*) INTO homolog_exists FROM homologacion WHERE cod_homolg = cod_Homolog_Est_param;
 
-    -- Verificar si existe el código de estudiante en la tabla estudiante
+   
     SELECT COUNT(*) INTO estudiante_exists FROM estudiante WHERE codigo_Est = cod_Est_Homolog_param;
 
-    -- Si no existe el código de homolog, insertar en homologacion
+   
     IF homolog_exists = 0 THEN
         INSERT INTO homologacion (cod_homolg) VALUES (cod_Homolog_Est_param);
     END IF;
 
-    -- Si existe el código de estudiante, realizar inserción en homologacion_Estudiante
+  
     IF estudiante_exists > 0 THEN
         INSERT INTO homologacion_Estudiante (
             empresa_Homolog,
@@ -407,15 +474,15 @@ CREATE PROCEDURE ActualizarHomologacionEstudiantes(
     IN cod_Homolog_Est_param INT
 )
 BEGIN
-    -- Verificar si existe el registro con el cod_Homolog_Est_param en homologacion
+   
     SELECT COUNT(*) INTO @homolog_exists FROM homologacion WHERE cod_homolg = cod_Homolog_Est_param;
 
-    -- Si existe el registro en homologacion, proceder a la actualización
+    
     IF @homolog_exists > 0 THEN
-        -- Verificar si existe el registro con el cod_Homolog_Est_param en homologacion_Estudiante
+      
         SELECT COUNT(*) INTO @estudiante_exists FROM homologacion_Estudiante WHERE cod_Homolog_Est = cod_Homolog_Est_param;
 
-        -- Si el registro existe, realizar la actualización
+      
         IF @estudiante_exists > 0 THEN
             UPDATE homologacion_Estudiante
             SET empresa_Homolog = empresa_Homolog_param,
@@ -487,22 +554,22 @@ BEGIN
     DECLARE existePasantia INT;
     DECLARE existeEstudiante INT;
 
-    -- Verificar si el código de pasantía existe en la tabla pasantias
+    
     SELECT COUNT(*) INTO existePasantia FROM pasantias WHERE cod_Pasantia = codPasantiaParam;
 
-    -- Si la pasantía no existe, insertar el código de pasantía en pasantias
+    
     IF existePasantia = 0 THEN
         INSERT INTO pasantias (cod_Pasantia) VALUES (codPasantiaParam);
     END IF;
 
-    -- Verificar si el código de estudiante existe en la tabla estudiante
+    
     SELECT COUNT(*) INTO existeEstudiante FROM estudiante WHERE codigo_Est = codPasEstParam;
 
-    -- Si el estudiante no existe, mostrar un mensaje
+    
     IF existeEstudiante = 0 THEN
         SELECT 'El código de estudiante no existe en la tabla estudiante';
     ELSE
-        -- Realizar la inserción en pasantias_Estudiante
+       
         INSERT INTO Pasantias_Estudiantess (
             fecha_Inicio,
             fecha_Final,
@@ -538,6 +605,8 @@ BEGIN
 END //
 
 DELIMITER ;
+
+
 -- Procedimiento para actualizar pasantia con Estudianbte 
 DELIMITER //
 
@@ -624,7 +693,7 @@ CREATE PROCEDURE InsertarCitasPasantias(
 BEGIN
     DECLARE error_message VARCHAR(200);
 
-    -- Verificar si la clave primaria ya existe
+
     IF EXISTS (SELECT 1 FROM citas_Seguimiento_Pasantia WHERE cod_Cita_Cont = p_codCitaCont) THEN
         SET error_message = 'El código de cita ya existe.';
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message;
@@ -652,19 +721,18 @@ CREATE PROCEDURE ActualizarCitaPasantia(
 BEGIN
     DECLARE error_message VARCHAR(200);
 
-    -- Verificar si la clave primaria a actualizar existe
+
     IF NOT EXISTS (SELECT 1 FROM citas_Seguimiento_Pasantias WHERE cod_Cita_Cont = p_codCitaCont) THEN
         SET error_message = 'La cita que intenta actualizar no existe.';
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message;
     END IF;
 
-    -- Verificar si el valor de la clave foránea existe en la tabla referenciada
+   
     IF NOT EXISTS (SELECT 1 FROM Pasantias_Estudiantess WHERE cod_Pas_Est = p_codPasEst) THEN
         SET error_message = 'El valor de la clave foránea no existe en la tabla referenciada.';
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message;
     END IF;
 
-    -- Actualizar los datos si las validaciones son exitosas
     UPDATE citas_Seguimiento_Pasantias
     SET fecha_Realizada = p_fechaRealizada,
         responsable_Cita = p_responsableCita,
@@ -697,6 +765,92 @@ foreign key (cod_Est_Pr) references estudiante (codigo_Est),
 foreign key (cod_Pro_Est) references proyecto (cod_Proyecto)
 );
 
+
+create table  asesoria_Proyecto (
+cod_Cita_Cont int primary key,
+fecha_Realizada datetime,
+responsable_Cita varchar (50) not null,
+Estado varchar (20),
+nota float,
+observaciones varchar (900),
+cod_Cita_Est bigint, 
+foreign key (cod_Cita_Est) references proyecto_Estudiante (cod_Est_Pr)
+);
+
+DELIMITER //
+
+CREATE PROCEDURE InsertarAsesoriaProyectos(
+    IN p_codCitaCont INT,
+    IN p_fechaRealizada DATETIME,
+    IN p_responsableCita VARCHAR(50),
+    IN p_estado VARCHAR(20),
+    IN p_nota FLOAT,
+    IN p_observaciones VARCHAR(900),
+    IN p_codCitaEst BIGINT
+)
+BEGIN
+    DECLARE error_message VARCHAR(200);
+
+    
+    IF EXISTS (SELECT 1 FROM asesoria_Proyecto WHERE cod_Cita_Cont = p_codCitaCont) THEN
+        SET error_message = 'El código de cita ya existe.';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message;
+    END IF;
+
+  
+    IF NOT EXISTS (SELECT 1 FROM proyecto_Estudiante WHERE cod_Est_Pr = p_codCitaEst) THEN
+        SET error_message = 'El valor de la clave foránea no existe en la tabla referenciada.';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message;
+    END IF;
+
+   
+    INSERT INTO asesoria_Proyecto (cod_Cita_Cont, fecha_Realizada, responsable_Cita, Estado, nota, observaciones, cod_Cita_Est)
+    VALUES (p_codCitaCont, p_fechaRealizada, p_responsableCita, p_estado, p_nota, p_observaciones, p_codCitaEst);
+END //
+
+DELIMITER ;
+
+
+DELIMITER //
+
+CREATE PROCEDURE ActualizarAsesoriaProyectos(
+    IN p_codCitaCont INT,
+    IN p_fechaRealizada DATETIME,
+    IN p_responsableCita VARCHAR(50),
+    IN p_estado VARCHAR(20),
+    IN p_nota FLOAT,
+    IN p_observaciones VARCHAR(900),
+    IN p_codCitaEst BIGINT
+)
+BEGIN
+    DECLARE error_message VARCHAR(200);
+
+    -- Verificar si la clave primaria a actualizar existe
+    IF NOT EXISTS (SELECT 1 FROM asesoria_Proyecto WHERE cod_Cita_Cont = p_codCitaCont) THEN
+        SET error_message = 'La cita que intenta actualizar no existe.';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message;
+    END IF;
+
+    -- Verificar si el valor de la clave foránea existe en la tabla referenciada
+    IF NOT EXISTS (SELECT 1 FROM proyecto_Estudiante WHERE cod_Est_Pr = p_codCitaEst) THEN
+        SET error_message = 'El valor de la clave foránea no existe en la tabla referenciada.';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message;
+    END IF;
+
+    -- Actualizar los datos si las validaciones son exitosas
+    UPDATE asesoria_Proyecto
+    SET fecha_Realizada = p_fechaRealizada,
+        responsable_Cita = p_responsableCita,
+        Estado = p_estado,
+        nota = p_nota,
+        observaciones = p_observaciones,
+        cod_Cita_Est = p_codCitaEst
+    WHERE cod_Cita_Cont = p_codCitaCont;
+END //
+
+DELIMITER ;
+
+
 select * from proyecto_Estudiante;
 DELIMITER //
 
@@ -713,10 +867,10 @@ CREATE PROCEDURE InsertarProyectoYEstudiante(
 BEGIN
     DECLARE proyecto_exists INT;
 
-    -- Verificar si existe el código de proyecto en la tabla proyecto
+  
     SELECT COUNT(*) INTO proyecto_exists FROM proyecto WHERE cod_Proyecto = cod_Pro_Est_param;
 
-    -- Si no existe el código de proyecto, insertar en la tabla proyecto
+   
     IF proyecto_exists = 0 THEN
         INSERT INTO proyecto (cod_Proyecto) VALUES (cod_Pro_Est_param);
         SELECT 'Se ha insertado un nuevo proyecto en la tabla proyecto.';
@@ -769,15 +923,15 @@ CREATE PROCEDURE ActualizarProyectoEstudiante(
 BEGIN
     DECLARE proyecto_exists INT;
 
-    -- Verificar si existe el código de proyecto en la tabla proyecto
+  
     SELECT COUNT(*) INTO proyecto_exists FROM proyecto WHERE cod_Proyecto = cod_Pro_Est_param;
 
-    -- Si no existe el código de proyecto, mostrar un mensaje y detener la actualización
+  
     IF proyecto_exists = 0 THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'El código de proyecto especificado no existe en la tabla proyecto. No se puede realizar la actualización.';
     ELSE
-        -- Actualizar en la tabla proyecto_Estudiante
+       
         UPDATE proyecto_Estudiante
         SET nombre_proyecto = nombre_proyecto_param,
             docente_Asesoria = docente_Asesoria_param,
