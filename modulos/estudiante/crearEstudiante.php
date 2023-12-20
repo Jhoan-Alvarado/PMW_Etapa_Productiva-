@@ -1,6 +1,16 @@
 <?php
+
+session_start();
+
+if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
+    header("Location: pmw/index.php"); 
+    exit();
+}
+
 include('../../config/db.php');
 include("../../vistas/header.php");
+
+
 try {
 
   $stmt = $pdo->prepare("SELECT * FROM tecnico");
