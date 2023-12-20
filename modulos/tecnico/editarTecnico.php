@@ -1,9 +1,10 @@
-<?php include ("../../config/db.php");
-include('../../vistas/header.php');
+<?php
+include("../../vistas/header.php");
+include("../../config/db.php");
 
 if (isset($_GET["id"])) {
     $cod_TecnicoE = $_GET["id"];
-    
+
     if ($_SERVER["REQUEST_METHOD"] === "POST") {
         try {
             $nombreTecnico = $_POST["nombreTecnico"];
@@ -11,10 +12,14 @@ if (isset($_GET["id"])) {
             $stm->bindParam(':nombre', $nombreTecnico);
             $stm->bindParam(':codigo', $cod_TecnicoE);
             $stm->execute();
-            header("Location: tecnico.php");
-            exit(); 
+
+            // Muestra una alerta de éxito utilizando JavaScript
+            echo "<script>alert('Actualización realizada correctamente'); window.location.href='tecnico.php';</script>";
+            exit();
         } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
+            // Muestra una alerta de error utilizando JavaScript
+            echo "<script>alert('Error al actualizar: " . $e->getMessage() . "'); window.location.href='tecnico.php';</script>";
+            exit();
         }
     }
 }
@@ -25,10 +30,12 @@ if (isset($_GET["id"])) {
 </head>
 
 <div class="formulario_estudiantes">
-<form  action="" method="post">
-    <h1><?php echo $cod_TecnicoE; ?></h1>
-    <input class="estilo" type="text" name="nombreTecnico">
-    <button type="submit">Actualizar</button>
-    <button><a href="tecnico.php">CANCELAR</a></button>
-</form>
+    <form action="" method="post">
+        <h1><?php echo $cod_TecnicoE; ?></h1>
+        <input class="estilo" type="text" name="nombreTecnico">
+        <button type="submit">Actualizar</button>
+        <button><a href="tecnico.php">CANCELAR</a></button>
+    </form>
 </div>
+
+<?php include("../../vistas/footer.php"); ?>
