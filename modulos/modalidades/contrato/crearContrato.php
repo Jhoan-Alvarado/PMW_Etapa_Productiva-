@@ -1,7 +1,9 @@
-<?php include("../../../config/db.php"); 
-include("../../../vistas/header.php"); ?>
- 
-<?php 
+<?php
+include("../../../config/db.php");
+include("../../../vistas/header.php");
+?>
+
+<?php
 
 if (isset($_GET['id'])) {
     $cod_Est = $_GET['id'];
@@ -10,12 +12,17 @@ if (isset($_GET['id'])) {
     $stm->execute();
     $estudiante = $stm->fetchAll(PDO::FETCH_ASSOC);
 }
-
-
 ?>
+
 <head>
     <link rel="stylesheet" href="../../../css/modalidades/contrato/contrato.css">
+    <script>
+        function mostrarAlerta(mensaje) {
+            alert(mensaje);
+        }
+    </script>
 </head>
+
 <body>
 
 
@@ -58,37 +65,39 @@ if (isset($_GET['id'])) {
 <?php   
 
     
-if($_POST){
-    
+if ($_POST) {
     try {
-            
-    $cod_Est_Cont = $_POST["cod_Est_Cont"];
-    $empresa_Vinculada = $_POST["empresa_Vinculada"];
-    $fecha_Incio = $_POST["fecha_Incio"];
-    $fecha_Final = $_POST["fecha_Final"];
-    $horarios = $_POST["horarios"];
-    $copia_Contrato = isset($_POST["copia_Contrato"]) ? 1 : 0;
-    $constancia = isset($_POST["constancia"]) ? 1 : 0;
-    
-    $stm = $pdo->prepare("CALL insertar_contrato_estudiante(?,?,?,?,?,?,?,?)");
-    $cod_ContratoA_Est = rand(1, 1000);
-    $stm->bindParam(1, $cod_Est, PDO::PARAM_INT);
-    $stm->bindParam(2, $cod_ContratoA_Est, PDO::PARAM_INT);
-    $stm->bindParam(3, $empresa_Vinculada, PDO::PARAM_STR);
-    $stm->bindParam(4, $fecha_Incio, PDO::PARAM_STR);
-    $stm->bindParam(5, $fecha_Final , PDO::PARAM_STR);
-    $stm->bindParam(6, $horarios, PDO::PARAM_STR);
-    $stm->bindParam(7, $copia_Contrato, PDO::PARAM_BOOL);
-    $stm->bindParam(8, $constancia, PDO::PARAM_STR);
-    $stm->execute();
-    header("Location: ../../estudiante/vestudiante.php?id=$cod_Est");
 
-}
-    
-    catch (Exception $e) {  
-        echo "Error". $e->getMessage() ."";
+        $cod_Est_Cont = $_POST["cod_Est_Cont"];
+        $empresa_Vinculada = $_POST["empresa_Vinculada"];
+        $fecha_Incio = $_POST["fecha_Incio"];
+        $fecha_Final = $_POST["fecha_Final"];
+        $horarios = $_POST["horarios"];
+        $copia_Contrato = isset($_POST["copia_Contrato"]) ? 1 : 0;
+        $constancia = isset($_POST["constancia"]) ? 1 : 0;
+
+        $stm = $pdo->prepare("CALL insertar_contrato_estudiante(?,?,?,?,?,?,?,?)");
+        $cod_ContratoA_Est = rand(1, 1000);
+        $stm->bindParam(1, $cod_Est, PDO::PARAM_INT);
+        $stm->bindParam(2, $cod_ContratoA_Est, PDO::PARAM_INT);
+        $stm->bindParam(3, $empresa_Vinculada, PDO::PARAM_STR);
+        $stm->bindParam(4, $fecha_Incio, PDO::PARAM_STR);
+        $stm->bindParam(5, $fecha_Final, PDO::PARAM_STR);
+        $stm->bindParam(6, $horarios, PDO::PARAM_STR);
+        $stm->bindParam(7, $copia_Contrato, PDO::PARAM_BOOL);
+        $stm->bindParam(8, $constancia, PDO::PARAM_STR);
+        $stm->execute();
+
+        echo '<script>';
+        echo 'mostrarAlerta("Contrato insertado exitosamente.");';
+        echo 'window.location.href = "../../estudiante/vestudiante.php?id=' . $cod_Est . '";';
+        echo '</script>';
+        exit;
+    } catch (Exception $e) {
+        echo '<script>';
+        echo 'mostrarAlerta("Error al insertar el contrato. Por favor, inténtalo de nuevo.");';
+        echo '</script>';
+        // Puedes agregar más detalles del error si es necesario, como: echo 'mostrarAlerta("Error: ' . $e->getMessage() . '");';
     }
 }
-
-
-    ?>
+?>

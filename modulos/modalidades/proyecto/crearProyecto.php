@@ -1,8 +1,6 @@
-<?php include("../../../config/db.php");
-include("../../../vistas/header.php");
-?>
-
 <?php
+include("../../../config/db.php");
+include("../../../vistas/header.php");
 
 if (isset($_GET['id'])) {
   $cod_Est = $_GET['id'];
@@ -16,8 +14,12 @@ if (isset($_GET['id'])) {
 
 <head>
   <link rel="stylesheet" href="../../../css/estudiante/crearE.css">
+  <script>
+    function mostrarAlerta(mensaje) {
+      alert(mensaje);
+    }
+  </script>
 </head>
-
 
 <div class="formulario_estudiantes">
   <?php foreach ($estudiante as $e) { ?>
@@ -35,10 +37,10 @@ if (isset($_GET['id'])) {
       <label for="">Docente de asesorias</label>
       <input class="estilo" type="text" id="" name="docente" maxlength="20"><br><br>
 
-      <label for="">fecha de presentacion trabajo escrito</label>
+      <label for="">Fecha de presentacion trabajo escrito</label>
       <input class="estilo" type="date" id="" name="fechaTE"><br><br>
 
-      <label for="">fecha de sustentacion </label>
+      <label for="">Fecha de sustentacion </label>
       <input class="estilo" type="date" id="" name="fechaST"><br><br>
 
       <label for="">Nota Final </label>
@@ -46,18 +48,15 @@ if (isset($_GET['id'])) {
 
       <textarea class="estilo" name="observacion" rows="6" cols="40" placeholder="OBSERVACION...."></textarea><br><br>
 
-      <button type="submit" value="Enviar">Enviar</button>
+      <button type="submit" value="Enviar" onclick="mostrarAlerta('Proyecto insertado exitosamente.');">Enviar</button>
     </form>
     <?php $estudiante = 0;
   } ?>
 </div>
 
-
 <?php
 if ($_POST) {
-
   try {
-
     $nombreP = $_POST['nombreP'];
     $docente = $_POST['docente'];
     $fechaTe = $_POST['fechaTE'];
@@ -77,11 +76,15 @@ if ($_POST) {
     $codProyecto = rand(1, 1000);
     $stm->bindParam(8, $codProyecto, PDO::PARAM_INT);
     $stm->execute();
-    header("Location: ../../estudiante/vestudiante.php?id=$cod_Est");
+
+    echo '<script>';
+    echo 'mostrarAlerta("Proyecto insertado exitosamente.");';
+    echo 'window.location.href = "../../estudiante/vestudiante.php?id=' . $cod_Est . '";';
+    echo '</script>';
+    exit;
 
   } catch (Exception $e) {
     echo "Error" . $e->getMessage() . "";
   }
 }
-
 ?>
