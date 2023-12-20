@@ -87,6 +87,8 @@ $asesoria= $stm->fetchAll(PDO::FETCH_ASSOC);
                     <li><strong>Carrera : </strong>
                         <?php echo $e['nombre_Tecnico'] ?>
                     </li>
+                    
+                    <li><a href="actualizarEstudiante.php?id=<?php echo $cod_Est?>">Actualizar Información</a></li>
                 </div>
             <?php } ?>
         </div>
