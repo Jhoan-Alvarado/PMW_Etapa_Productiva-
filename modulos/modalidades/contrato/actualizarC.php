@@ -2,10 +2,10 @@
 include("../../../vistas/header.php"); ?>
 
 
+
 <head>
     <link rel="stylesheet" href="../../../css/estudiante/crearE.css">
 </head>
-
 
 <?php
 
@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label for="fecha_Final">Fecha Final:
                     <?php echo $e['fecha_Final'] ?>
                 </label>
-                <input class="estilo" type="datetime-local" name="fecha_Final" required><br>
+                <input class="estilo" type="datetime-local" value="<?php echo $e['fecha_Final']?>"name="fecha_Final" required><br>
 
                 <label for="horarios">Horarios:</label>
                 <input class="estilo" type="text" name="horarios" value="<?php echo $e['horarios'] ?>" required><br>

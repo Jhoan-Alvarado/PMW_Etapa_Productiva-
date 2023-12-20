@@ -14,10 +14,15 @@ if (isset($_GET["id"] )){
 
 ?>
 
+<head>
+  <link rel="stylesheet" href="../../../css/estudiante/crearE.css">
+</head>
 
-<div class="formulario_estudiantes">
+<body>
+  
+  <div class="formulario_estudiantes">
     <?php foreach ($proyecto as $e) { ?>
-        <h2>Formulario Actualizacion  De Pasantia Para
+      <h2>Formulario Actualizacion  De Proyecto Para
             <?php echo $e['primer_Nombre'] . "  " . $e['primer_Apellido'] ?>
         </h2>
 
@@ -50,15 +55,16 @@ if (isset($_GET["id"] )){
       <button type="submit" value="Enviar">Enviar</button>
     </form>
         <?php } ?>
-    </div>
-
-
-    <?php
+      </div>
+      
+    </body>
+      
+      <?php
     
     if ($_POST) {
-
-        try {
       
+      try {
+        
           $nombreP = $_POST['nombreP'];
           $docente = $_POST['docente'];
           $fechaTe = $_POST['fechaTE'];

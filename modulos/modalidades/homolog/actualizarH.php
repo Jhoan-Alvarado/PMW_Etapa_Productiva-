@@ -35,7 +35,7 @@ if (isset($_GET['id'])) {
       <input class="estilo" type="text" value="<?php echo $cod_Est ?>" name="cod_Est_Past" readonly required><br>
       
       <label for="">Fecha de solicitud : <?php echo $h['fecha_Solicitud']; ?></label>
-      <input class="estilo" type="datetime-local" id="" name="fecha_S" required maxlength="15"><br><br>
+      <input class="estilo" type="datetime-local" id="" value="<?php echo $h['fecha_Solicitud']?>" name="fecha_S" required maxlength="15"><br><br>
 
       <label for="">Nombre de la empresa</label>
       <input class="estilo" type="text" id="" name="empresa" value="<?php echo $h['empresa_Homolog'] ?>"  required maxlength="20"><br><br>

@@ -73,7 +73,6 @@ if ($_POST){
       }
 catch(PDOException $e) {
       echo"ERROR". $e->getMessage();
-      
     }
   }
     
