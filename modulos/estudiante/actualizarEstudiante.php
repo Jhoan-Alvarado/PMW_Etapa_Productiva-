@@ -1,13 +1,13 @@
-<?php include('../../config/db.php');
+<?php
+include('../../config/db.php');
 include("../../vistas/header.php");
 
 session_start();
 
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
-    header("Location: /pmw/index.php"); 
+    header("Location: /pmw/index.php");
     exit();
 }
-
 
 if (isset($_GET['id'])) {
     $cod_Est = $_GET['id'];
@@ -25,7 +25,6 @@ if (isset($_GET['id'])) {
     $tecnicos = $stm->fetchAll(PDO::FETCH_ASSOC);
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-      
         try {
             $iden_Estudiante = (isset($_POST["ident_Estudiante"])) ? $_POST["ident_Estudiante"] : "";
             $primer_nombre = (isset($_POST["primer_Nombre"])) ? $_POST["primer_Nombre"] : "";
@@ -36,37 +35,40 @@ if (isset($_GET['id'])) {
             $cod_tecnico = (isset($_POST["cod_Tecnico_Est"])) ? $_POST["cod_Tecnico_Est"] : "";
             $semestre = (isset($_POST["semestre"])) ? $_POST["semestre"] : "";
 
-            $stm = $pdo->prepare ('CALL actualizar_estudiante(?,?,?,?,?,?,?,?,?)');
-            $stm->bindParam(1,$cod_Est, PDO::PARAM_INT);
-            $stm->bindParam(2,$iden_Estudiante, PDO::PARAM_STR);
-            $stm->bindParam(3,$primer_nombre, PDO::PARAM_STR);
-            $stm->bindParam(4,$segundo_nombre, PDO::PARAM_STR);
-            $stm->bindParam(5,$primer_apellido, PDO::PARAM_STR);
-            $stm->bindParam(6,$segundo_apellido, PDO::PARAM_STR);
-            $stm->bindParam(7,$telefono, PDO::PARAM_INT);
+            $stm = $pdo->prepare('CALL actualizar_estudiante(?,?,?,?,?,?,?,?,?)');
+            $stm->bindParam(1, $cod_Est, PDO::PARAM_INT);
+            $stm->bindParam(2, $iden_Estudiante, PDO::PARAM_STR);
+            $stm->bindParam(3, $primer_nombre, PDO::PARAM_STR);
+            $stm->bindParam(4, $segundo_nombre, PDO::PARAM_STR);
+            $stm->bindParam(5, $primer_apellido, PDO::PARAM_STR);
+            $stm->bindParam(6, $segundo_apellido, PDO::PARAM_STR);
+            $stm->bindParam(7, $telefono, PDO::PARAM_INT);
             $stm->bindParam(8, $semestre, PDO::PARAM_STR);
-            $stm->bindParam(9,$cod_tecnico, PDO::PARAM_INT);
+            $stm->bindParam(9, $cod_tecnico, PDO::PARAM_INT);
             $stm->execute();
-            header("Location: vestudiante.php?id=$cod_Est");
+
+            echo '<script>';
+            echo 'alert("Estudiante actualizado exitosamente.");';
+            echo 'window.location.href = "vestudiante.php?id=' . $cod_Est . '";';
+            echo '</script>';
             exit;
-    
+        } catch (PDOException $e) {
+            echo '<script>';
+            echo 'alert("Error al actualizar el estudiante. Por favor, inténtalo de nuevo.");';
+            echo '</script>';
+            
         }
-    catch (PDOException $e) {
-         echo "ERROR". $e->getMessage();
-    }
     }
 }
-
-
-
 ?>
 
-
-
-
-
 <head>
-  <link rel="stylesheet" href="../../css/estudiante/crearE.css">
+    <link rel="stylesheet" href="../../css/estudiante/crearE.css">
+    <script>
+        function mostrarAlerta(mensaje) {
+            alert(mensaje);
+        }
+    </script>
 </head>
 
 <body>

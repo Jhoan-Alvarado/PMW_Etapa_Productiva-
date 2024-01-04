@@ -10,10 +10,12 @@ if (isset($_GET['id'])) {
   $estudiante = $stm->fetchAll(PDO::FETCH_ASSOC);
 }
 ?>
+
 <head>
 
 
 <link rel="stylesheet" href="../../../css/citas/pasantia.css">
+
 </head>
 
 <body>
@@ -73,6 +75,7 @@ if ($_POST){
       }
 catch(PDOException $e) {
       echo"ERROR". $e->getMessage();
+      
     }
   }
     
@@ -80,3 +83,4 @@ catch(PDOException $e) {
     
 
 </body>
+

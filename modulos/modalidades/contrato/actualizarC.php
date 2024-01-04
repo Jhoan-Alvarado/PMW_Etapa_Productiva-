@@ -1,7 +1,7 @@
-<?php include("../../../config/db.php");
-include("../../../vistas/header.php"); ?>
-
-
+<?php
+include("../../../config/db.php");
+include("../../../vistas/header.php");
+?>
 
 <head>
     <link rel="stylesheet" href="../../../css/estudiante/crearE.css">
@@ -15,11 +15,9 @@ if (isset($_GET['id'])) {
     $stm = $pdo->prepare("SELECT ce.cod_Est_Cont,ce.cod_ContratoA_Est, ce.empresa_Vinculada,ce.fecha_Incio, ce.fecha_Final, ce.horarios,ce.copia_Contrato,ce.constancia, e.primer_Nombre, e.primer_Apellido  FROM contrato_Estudiante ce INNER JOIN estudiante e ON ce.cod_Est_Cont = e.codigo_Est WHERE cod_Est_Cont = $cod_Est");
     $stm->execute();
     $contrato = $stm->fetchAll(PDO::FETCH_ASSOC);
-
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
     try {
         $cod_Est_Cont = $_POST["cod_Est_Cont"];
         $codigoC = $_POST["cod_ContratoA_Est"];
@@ -37,16 +35,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stm->bindParam(4, $fecha_Incio, PDO::PARAM_STR);
         $stm->bindParam(5, $fecha_Final, PDO::PARAM_STR);
         $stm->bindParam(6, $horarios, PDO::PARAM_STR);
-        $stm->bindParam(7, $copia_Contrato,PDO::PARAM_BOOL);
+        $stm->bindParam(7, $copia_Contrato, PDO::PARAM_BOOL);
         $stm->bindParam(8, $constancia, PDO::PARAM_BOOL);
         $stm->execute();
-        header("Location: ../../estudiante/vestudiante.php?id=$cod_Est");
-        exit;
-    } 
-    catch (Exception $e) {  
-        echo "Error". $e->getMessage() ."";
-    }
 
+        echo '<script>';
+        echo 'alert("Contrato actualizado exitosamente.");';
+        echo 'window.location.href = "../../estudiante/vestudiante.php?id=' . $cod_Est . '";';
+        echo '</script>';
+        exit;
+    } catch (PDOException $e) {
+        echo '<script>';
+        echo 'alert("Error al actualizar el contrato. Por favor, inténtalo de nuevo.");';
+        echo '</script>';
+        // Puedes agregar más detalles del error si es necesario, como: echo 'alert("Error: ' . $e->getMessage() . '");';
+    }
 }
 ?>
 

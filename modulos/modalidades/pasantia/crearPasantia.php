@@ -1,8 +1,6 @@
-<?php include("../../../config/db.php");
-include("../../../vistas/header.php"); ?>
-
 <?php
-
+include("../../../config/db.php");
+include("../../../vistas/header.php");
 
 if (isset($_GET['id'])) {
     $cod_Est = $_GET['id'];
@@ -11,16 +9,16 @@ if (isset($_GET['id'])) {
     $stm->execute();
     $estudiante = $stm->fetchAll(PDO::FETCH_ASSOC);
 }
-
-
-
 ?>
-
 
 <head>
     <link rel="stylesheet" href="../../../css/estudiante/crearE.css">
+    <script>
+        function mostrarAlerta(mensaje) {
+            alert(mensaje);
+        }
+    </script>
 </head>
-
 
 <div class="formulario_estudiantes">
     <?php foreach ($estudiante as $e) { ?>
@@ -29,8 +27,7 @@ if (isset($_GET['id'])) {
         </h2>
         <form method="post" action="">
             <label for="cod_Est_Past">Código Estudiante:</label>
-            <input class="estilo" type="text" value="<?php echo $e['codigo_Est'] ?>" name="cod_Est_Past" readonly
-                required><br>
+            <input class="estilo" type="text" value="<?php echo $e['codigo_Est'] ?>" name="cod_Est_Past" readonly required><br>
 
             <label for="">Fecha de presentacion hoja de vida </label>
             <input class="estilo" type="datetime-local" id="" name="hojaV"><br><br>
@@ -48,7 +45,9 @@ if (isset($_GET['id'])) {
             <input class="estilo" type="datetime-local" id="" name="fechaI" required><br><br>
 
             <label for="">Fecha final</label>
+
             <input type="datetime-local" class="estilo" name="fechaF" id="" class="estilo">
+
 
             <label for="">Carta de presentacion</label>
             <input type="checkbox" name="cartaP">
@@ -72,17 +71,16 @@ if (isset($_GET['id'])) {
             <label for="">Constancia</label>
             <input type="checkbox" name="constancia" id="">
             <br><br>
-            <button type="submit" value="Enviar">Enviar</button>
+        <?php } ?>
+        <!-- Botón de enviar fuera del bucle -->
+        <button type="submit" value="Enviar" onclick="mostrarAlerta('Pasantía insertada exitosamente.');">Enviar</button>
         </form>
-    <?php } ?>
 </div>
 
 <?php
 
 if ($_POST) {
-
     try {
-
 
         $codE = $_POST["cod_Est_Past"];
         $hojaV = $_POST["hojaV"];
@@ -113,13 +111,16 @@ if ($_POST) {
         $cod_pasantia = rand(1, 1000);
         $stm->bindParam(13, $cod_pasantia, PDO::PARAM_INT);
         $stm->execute();
-        header("Location: ../../estudiante/vestudiante.php?id=$cod_Est");
 
+        echo '<script>';
+        echo 'mostrarAlerta("Pasantía insertada exitosamente.");';
+        echo 'window.location.href = "../../estudiante/vestudiante.php?id=' . $cod_Est . '";';
+        echo '</script>';
+        exit;
     } catch (Exception $e) {
-        echo "Error" . $e->getMessage() . "";
+        echo '<script>';
+        echo 'mostrarAlerta("Error al insertar la pasantía. Por favor, inténtalo de nuevo.");';
+        echo '</script>';
     }
 }
-
-
-
 ?>

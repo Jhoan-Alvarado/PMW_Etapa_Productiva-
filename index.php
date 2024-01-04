@@ -1,6 +1,8 @@
 <?php
 session_start();
 
+$error = "";
+
 if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
     header("Location: modulos/estudiante/estudiantes.php");
     exit();
@@ -22,25 +24,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($result && $result['Mensaje'] === 'Credenciales válidas') {
             $_SESSION['logged_in'] = true;
-            header("Location: modulos/estudiante/estudiantes.php");
+
+            // Mostrar alerta cuando el acceso sea concedido
+            echo '<script type="text/javascript">alert("Acceso concedido. ¡Bienvenido!"); window.location.href="modulos/estudiante/estudiantes.php";</script>';
             exit();
         } else {
             $error = "Credenciales inválidas";
         }
     } catch (PDOException $e) {
-        echo "ERROR: " . $e->getMessage();
+        $error = "Error al procesar las credenciales";
+        // Puedes imprimir el mensaje de error detallado si es necesario: echo "ERROR: " . $e->getMessage();
     }
 }
 ?>
 
 <head>
     <link rel="stylesheet" href="css/index.css">
+    <style>
+        .error-message {
+            color: red;
+        }
+    </style>
 </head>
 
 <body>
-    <?php if (isset($error)) { echo "<p>$error</p>"; } ?>
     <div class="login-container">
         <h1>Iniciar Sesión</h1>
+        <?php if (!empty($error)) { ?>
+            <div class="error-message">
+                <?php echo $error; ?>
+            </div>
+        <?php } ?>
         <form id="login-form" method="post" action=""> 
             <input type="text" id="username" name="usuario" placeholder="Nombre de usuario" required>
             <input type="password" id="password" name="contrasena" placeholder="Contraseña" required>

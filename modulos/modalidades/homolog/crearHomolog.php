@@ -1,21 +1,23 @@
-<?php include("../../../config/db.php");
-include("../../../vistas/header.php"); ?>
-
-
 <?php
+include("../../../config/db.php");
+include("../../../vistas/header.php");
+
 if (isset($_GET['id'])) {
-  $cod_Est = $_GET['id'];
+    $cod_Est = $_GET['id'];
 
-  $stm = $pdo->prepare("SELECT * FROM estudiante WHERE codigo_Est = $cod_Est");
-  $stm->execute();
-  $estudiante = $stm->fetchAll(PDO::FETCH_ASSOC);
+    $stm = $pdo->prepare("SELECT * FROM estudiante WHERE codigo_Est = $cod_Est");
+    $stm->execute();
+    $estudiante = $stm->fetchAll(PDO::FETCH_ASSOC);
 }
-
-
 ?>
 
 <head>
-  <link rel="stylesheet" href="../../../css/estudiante/crearE.css">
+    <link rel="stylesheet" href="../../../css/estudiante/crearE.css">
+    <script>
+        function mostrarAlerta(mensaje) {
+            alert(mensaje);
+        }
+    </script>
 </head>
 
 
@@ -56,31 +58,35 @@ if (isset($_GET['id'])) {
 <?php
 
 if ($_POST) {
-
   try {
+      $empresa = $_POST['empresa'];
+      $fechaA = $_POST['fechaA'];
+      $fechaS = $_POST['fecha_S'];
+      $estado = $_POST['estado'];
+      $observacion = $_POST['observacion'];
 
+      $stm = $pdo->prepare("CALL InsertarHomologacion_Estudiantes(?,?,?,?,?,?,?)");
 
-    $empresa = $_POST['empresa'];
-    $fechaA = $_POST['fechaA'];
-    $fechaS = $_POST['fecha_S'];
-    $estado = $_POST['estado'];
-    $observacion = $_POST['observacion'];
+      $stm->bindParam(1, $empresa, PDO::PARAM_STR);
+      $stm->bindParam(2, $fechaA, PDO::PARAM_STR);
+      $stm->bindParam(3, $fechaS, PDO::PARAM_STR);
+      $stm->bindParam(4, $estado, PDO::PARAM_STR);
+      $stm->bindParam(5, $observacion, PDO::PARAM_STR);
+      $stm->bindParam(6, $cod_Est, PDO::PARAM_INT);
+      $codHomolog = rand(1, 1000);
+      $stm->bindParam(7, $codHomolog, PDO::PARAM_INT);
+      $stm->execute();
 
-    $stm = $pdo->prepare("CALL InsertarHomologacion_Estudiantes(?,?,?,?,?,?,?)");
-
-    $stm->bindParam(1, $empresa, PDO::PARAM_STR);
-    $stm->bindParam(2, $fechaA, PDO::PARAM_STR);
-    $stm->bindParam(3, $fechaS, PDO::PARAM_STR);
-    $stm->bindParam(4, $estado, PDO::PARAM_STR);
-    $stm->bindParam(5, $observacion, PDO::PARAM_STR);
-    $stm->bindParam(6, $cod_Est, PDO::PARAM_INT);
-    $codHomolog = rand(1, 1000);
-    $stm->bindParam(7, $codHomolog, PDO::PARAM_INT);
-    $stm->execute();
-    header("Location: ../../estudiante/vestudiante.php?id=$cod_Est");
-
+      echo '<script>';
+      echo 'mostrarAlerta("Homologación insertada exitosamente.");';
+      echo 'window.location.href = "../../estudiante/vestudiante.php?id=' . $cod_Est . '";';
+      echo '</script>';
+      exit;
   } catch (Exception $e) {
-    echo "Error" . $e->getMessage() . "";
+      echo '<script>';
+      echo 'mostrarAlerta("Error al insertar la homologación. Por favor, inténtalo de nuevo.");';
+      echo '</script>';
+      // Puedes agregar más detalles del error si es necesario, como: echo 'mostrarAlerta("Error: ' . $e->getMessage() . '");';
   }
 }
 ?>
