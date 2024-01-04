@@ -9,6 +9,7 @@ contrasenia varchar (255) not null
 ); 
 
 insert into administrador values ("AdminPMW", "123");
+insert into administrador values ("Flor", "123");
 
 select * from administrador;
  call ValidadorrCredenciales ("AdminPMW", "123");
@@ -667,7 +668,7 @@ DELIMITER ;
 
 
     
-create table  citas_Seguimiento_Pasantias (
+create table  citas_Seguimiento_Pasantia (
 cod_Cita_Cont int primary key,
 fecha_Realizada datetime,
 responsable_Cita varchar (50) not null,

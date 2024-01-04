@@ -59,7 +59,7 @@ if ($_POST){
           $nota = floatval($n);
           $observacion = $_POST['observaciones'];
 
-          $stm = $pdo->prepare('CALL InsertarCitasPasantias(?,?,?,?,?,?,?)');
+          $stm = $pdo->prepare('CALL InsertarCitasPasantiass(?,?,?,?,?,?,?)');
           $stm->bindParam(1,$cod, PDO::PARAM_INT);
           $stm->bindParam(2,$fecha, PDO::PARAM_STR);
           $stm->bindParam(3,$responsable, PDO::PARAM_STR);

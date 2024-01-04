@@ -333,7 +333,7 @@ $asesoria= $stm->fetchAll(PDO::FETCH_ASSOC);
                                 <!-- <div class="etapa"> -->
                                 <h3>No Hay Una Modalidad Asignada</h3>
                                 <div class="modalidad">
-                                    <a href="../modalidades/contrato/crearContrato.php?id=<?php echo $cod_Est; ?>">Etapa Productiva</a>
+                                    <a href="../modalidades/contrato/crearContrato.php?id=<?php echo $cod_Est; ?>">Contrato De Aprendizaje</a>
                                     <a href="../modalidades/pasantia/crearPasantia.php?id=<?php echo $cod_Est; ?>">Pasantias</a>
                                     <a href="../modalidades/homolog/crearHomolog.php?id=<?php echo $cod_Est; ?>">Homologacion</a>
                                     <a href="../modalidades/proyecto/crearProyecto.php?id=<?php echo $cod_Est; ?>">Proyecto</a>

@@ -33,7 +33,7 @@ if (isset($_GET['id'])) {
                 required><br>
 
             <label for="">Fecha de presentacion hoja de vida </label>
-            <input class="datetime-local" type="date" id="" name="hojaV"><br><br>
+            <input class="estilo" type="datetime-local" id="" name="hojaV"><br><br>
 
             <label for="">Empresa</label>
             <input class="estilo" type="text" id="" name="empresaV" required maxlength="20"><br><br>
@@ -45,10 +45,10 @@ if (isset($_GET['id'])) {
             <input class="estilo" type="text" id="" name="horarios" required maxlength="20"><br><br>
 
             <label for="">Fecha de iniciacion </label>
-            <input class="datetime-local" type="date" id="" name="fechaI" required><br><br>
+            <input class="estilo" type="datetime-local" id="" name="fechaI" required><br><br>
 
             <label for="">Fecha final</label>
-            <input type="datetime-local" name="fechaF" id="" class="estilo">
+            <input type="datetime-local" class="estilo" name="fechaF" id="" class="estilo">
 
             <label for="">Carta de presentacion</label>
             <input type="checkbox" name="cartaP">
