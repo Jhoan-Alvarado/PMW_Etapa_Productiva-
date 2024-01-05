@@ -48,3 +48,43 @@ include("../../../vistas/header.php");
 </body>
 
 
+
+
+
+<?php
+
+if ($_POST) {
+    try {
+       
+        $fechaEvaluacion = $_POST['fecha_Evaluacion'];
+        $nombreResponsable = $_POST['nombreResponsable'];
+        $quienRealizo = $_POST['quien_Realizo'];
+        $nota = floatval($_POST['nota']);
+        $estadoP = $_POST['estado_p'];
+        $estadoD = $_POST['estado_d'];
+        $observaciones = $_POST['observaciones'];
+
+        
+        
+
+       
+        $stm = $pdo->prepare('evaluacionPasantia (?,?,?,?,?,?,?,?)');
+
+        
+        $stm->bindParam(1, $fechaEvaluacion, PDO::PARAM_STR);
+        $stm->bindParam(2, $nombreResponsable, PDO::PARAM_STR);
+        $stm->bindParam(3, $quienRealizo, PDO::PARAM_STR);
+        $stm->bindParam(4, $quienRealizo, PDO::PARAM_STR);
+        $stm->bindParam(5, $nota, PDO::PARAM_STR);
+        $stm->bindParam(6, $estadoP, PDO::PARAM_STR);
+        $stm->bindParam(7, $estadoD, PDO::PARAM_STR);
+        $stm->bindParam(8, $observaciones, PDO::PARAM_STR);
+        $stm->execute();
+        header("Location: ../../estudiante/vestudiante.php?id=$cod_Est");
+
+       
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
+    }
+}
+?>
