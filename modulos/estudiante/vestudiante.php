@@ -47,6 +47,15 @@ $stm = $pdo->prepare("SELECT * FROM asesoria_Proyecto WHERE cod_Cita_Est =  $cod
 $stm->execute();
 $asesoria= $stm->fetchAll(PDO::FETCH_ASSOC);
 
+$stm = $pdo->prepare("SELECT * FROM evaluacionPasantia WHERE cod_Pas_Est =  $cod_Est");
+$stm->execute();
+$evPasantia= $stm->fetchAll(PDO::FETCH_ASSOC);
+
+$stm = $pdo->prepare("SELECT * FROM evaluacionPasantiaContrato WHERE cod_Contrato_Est =  $cod_Est");
+$stm->execute();
+$evContrato= $stm->fetchAll(PDO::FETCH_ASSOC);
+
+
 ?>
 
 <head>
@@ -99,6 +108,8 @@ $asesoria= $stm->fetchAll(PDO::FETCH_ASSOC);
                 <div class="crear">
                     <a href="../seguimiento/citas_Contrato/crearC_Contrato.php?id=<?php echo $cod_Est ?>">Crear Cita </a>
 
+                    <a href="../seguimiento/form_evaluacion/evaluacion_contrato.php?id=<?php echo $cod_Est ?>">Evaluacion</a>
+
                 </div>
                 <div class="cita-info">
                     <?php foreach ($citaContrato as $c) { ?>
@@ -115,6 +126,8 @@ $asesoria= $stm->fetchAll(PDO::FETCH_ASSOC);
                             <li><a
                                     href="../seguimiento/citas_Contrato/actualizarC_Contrato.php?id=<?php echo $cod_Est ?>&cod=<?php echo $c["cod_Cita_Cont"] ?>">Ver
                                     mas</a></li>
+
+                                    
                         </ul>
 
                     <?php } ?>
@@ -126,6 +139,7 @@ $asesoria= $stm->fetchAll(PDO::FETCH_ASSOC);
                             <a href="../seguimiento/citas_Pasantia/crearC_Pasantia.php?id=<?php echo $cod_Est ?>">Crear Cita
                             </a>
 
+                            <a href="../seguimiento/form_evaluacion/evaluacion.php?id=<?php echo $cod_Est ?>">Evaluacion</a>
                         </div>
                         <div class="cita-info">
                         <?php foreach ($citaPasantia as $c) { ?>
@@ -142,7 +156,11 @@ $asesoria= $stm->fetchAll(PDO::FETCH_ASSOC);
                                     <li><a
                                             href="../seguimiento/citas_Pasantia/actualizarC_Pasantia.php?id=<?php echo $cod_Est ?>&cod=<?php echo $c["cod_Cita_Cont"] ?>">Ver
                                             mas</a></li>
+ 
                                 </ul>
+                                
+
+
 
                         <?php } ?>
                     <?php } else if ($homologacion) { ?>
@@ -211,7 +229,42 @@ $asesoria= $stm->fetchAll(PDO::FETCH_ASSOC);
 
                         <?php }
                         $contrato = 0; ?>
-                        <!-- </div> -->
+
+                        <?php foreach ($evContrato as $e) { ?>
+
+                        <ul>
+                            <h1>Evaluacion</h1>
+
+                            <li><strong>Fecha:</strong>
+                            <?php echo $e['fecha_Evaluacion'] ?>
+                            </li>
+
+                            <li><strong>Responsable de la evaluacion:</strong>
+                            <?php echo $e['quien_Realizo'] ?>
+                            </li>
+
+                            <li><strong>Nota:</strong>
+                            <?php echo $e['nota'] ?>
+                            </li>
+
+                            <li><strong>Estado Practicas:</strong>
+                            <?php echo $e['estado_p'] ?>
+                            </li>
+                            
+                            <li><strong>Estado Documentos:</strong>
+                            <?php echo $e['estado_d'] ?>
+                            </li>
+                            
+                            <li><strong>Observaciones:</strong>
+                            <?php echo $e['observaciones'] ?>
+                            </li>
+                        </ul>
+
+
+                        <?php }
+                        
+                        $evContrato = 0; ?>
+                                                <!-- </div> -->
 
                     <?php } else if ($pasantia) { ?>
                         <?php foreach ($pasantia as $p) { ?>
@@ -257,12 +310,52 @@ $asesoria= $stm->fetchAll(PDO::FETCH_ASSOC);
                                     <li> <a href="../modalidades/pasantia/actualizarP.php?id=<?php echo $cod_Est ?>">Actualizar
                                             Pasantia</a>
                                     </li>
-                                </ul>
+
+                        </ul>  
+                                
                                 <!-- </div> -->
 
                         <?php }
 
                         $pasantia = 0; ?>
+
+                        
+                        <?php foreach ($evPasantia as $d) { ?>
+
+                           <ul>
+                                <h1>Evaluacion</h1>
+
+                                <li><strong>Fecha:</strong>
+                                <?php echo $d['fecha_Evaluacion'] ?>
+                                </li>
+
+                                <li><strong>Responsable de la evaluacion:</strong>
+                                <?php echo $d['quien_Realizo'] ?>
+                                </li>
+
+                                <li><strong>Nota:</strong>
+                                <?php echo $d['nota'] ?>
+                                </li>
+
+                                <li><strong>Estado Practicas:</strong>
+                                <?php echo $d['estado_p'] ?>
+                                </li>
+                                
+                                <li><strong>Estado Documentos:</strong>
+                                <?php echo $d['estado_d'] ?>
+                                </li>
+                                
+                                <li><strong>Observaciones:</strong>
+                                <?php echo $d['observaciones'] ?>
+                                </li>
+
+                            </ul>
+
+
+                            <?php }
+                            
+                            $evPasantia = 0; ?>
+
                         </div>
                 <?php } else if ($proyecto) { ?>
                             <!-- <div class="etapa"> -->

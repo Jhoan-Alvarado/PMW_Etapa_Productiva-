@@ -954,3 +954,34 @@ END //
 DELIMITER ;
 
 
+CREATE TABLE evaluacionPasantia (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    nombreResponsable VARCHAR(100),
+    fecha_Evaluacion datetime,
+    quien_Realizo varchar (50) not null,
+    nota DECIMAL(5, 2),
+    estado_p VARCHAR(50),
+    estado_d VARCHAR(50),
+    observaciones varchar (900),
+    cod_Pas_Est bigint,
+    FOREIGN KEY (cod_Pas_Est) REFERENCES Pasantias_Estudiantess (cod_Pas_Est)
+);
+
+SELECT * FROM evaluacionPasantia WHERE cod_Pas_Est =  1488;
+
+CREATE TABLE evaluacionPasantiaContrato (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    nombreResponsable VARCHAR(100),
+    fecha_Evaluacion datetime,
+    quien_Realizo varchar (50) not null,
+    nota DECIMAL(5, 2),
+    estado_p VARCHAR(50),
+    estado_d VARCHAR(50),
+    observaciones varchar (900),
+    cod_Contrato_Est int,
+     FOREIGN KEY (cod_Contrato_Est) REFERENCES contrato_Estudiante (cod_ContratoA_Est)
+);
+
+
+SELECT * FROM evaluacionPasantiaContrato WHERE cod_Contrato_Est = 8692;
+
